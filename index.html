@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>청첩장 - 찬영 &amp; 예경</title>
+  <style>
+    /* ── Pretendard (오픈소스 CDN) ── */
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
+
+    /* ── Sackers Gothic Std ── */
+    @font-face {
+      font-family: 'Sackers Gothic Std';
+      font-weight: 900;
+      font-style: normal;
+      src: url('fonts/Sackers Gothic Heavy.otf') format('opentype');
+    }
+    @font-face {
+      font-family: 'Sackers Gothic Std';
+      font-weight: 500;
+      font-style: normal;
+      src: url('fonts/Sackers Gothic Medium.otf') format('opentype');
+    }
+    @font-face {
+      font-family: 'Sackers Gothic Std';
+      font-weight: 300;
+      font-style: normal;
+      src: url('fonts/Sackers Gothic Light.otf') format('opentype');
+    }
+
+    /* ── SunBatang ── */
+    @font-face {
+      font-family: 'SunBatang';
+      font-weight: 700;
+      font-style: normal;
+      src: url('fonts/SunBatang-Bold.otf') format('opentype');
+    }
+    @font-face {
+      font-family: 'SunBatang';
+      font-weight: 500;
+      font-style: normal;
+      src: url('fonts/SunBatang-Medium.otf') format('opentype');
+    }
+    @font-face {
+      font-family: 'SunBatang';
+      font-weight: 300;
+      font-style: normal;
+      src: url('fonts/SunBatang-Light.otf') format('opentype');
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --white: #ffffff;
+      --bg: #fbfcfc;
+      --text: #000000;
+      --text-muted: #adadad;
+      --text-mid: #7c7c7c;
+      --border: #d9d9d9;
+      --accent-yellow: #ebed93;
+      --accent-blue: #e9f1f2;
+      --accent-lime: #f6fad4;
+      --border-light: #cdcdcd;
+    }
+
+    body {
+      background: #e0e0e0;
+      display: flex;
+      justify-content: center;
+      font-family: 'Pretendard', sans-serif;
+    }
+
+    .phone {
+      width: 800px;
+      min-height: 100vh;
+      background: var(--white);
+      overflow: hidden;
+    }
+
+    /* ── 01 INTRO (Figma: frame 760×860, 20px margin each side) ── */
+    .intro {
+      position: relative;
+      background: var(--bg);
+      height: 960px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .intro-border-outer {
+      position: absolute;
+      top: 20px; left: 20px; right: 20px; bottom: 20px;
+      border: 1px solid var(--border);
+      pointer-events: none;
+    }
+
+    .intro-border-inner {
+      position: absolute;
+      top: 30px; left: 30px; right: 30px; bottom: 30px;
+      border: 0.5px solid #e2e2e2;
+      pointer-events: none;
+    }
+
+    .intro-content {
+      position: relative;
+      text-align: center;
+      padding: 0 60px;
+      width: 100%;
+    }
+
+    /* "the wedding of" — Sackers Medium 28px */
+    .intro-subtitle {
+      font-family: 'Sackers Gothic Std', sans-serif;
+      font-size: 28px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      color: var(--text);
+      margin-bottom: 25px;
+    }
+
+    /* "chanyoung & yegyeong" — Sackers Heavy 43px */
+    .intro-names {
+      font-family: 'Sackers Gothic Std', sans-serif;
+      font-size: 43px;
+      font-weight: 900;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    /* "&" — Sackers Medium 20px */
+    .intro-amp {
+      font-family: 'Sackers Gothic Std', sans-serif;
+      font-weight: 500;
+      font-size: 20px;
+    }
+
+    /* 일러스트: Figma 283×300px */
+    .intro-illustration {
+      width: 283px;
+      height: 300px;
+      object-fit: contain;
+      margin: 60px auto 60px;
+      display: block;
+    }
+
+    /* Quote — Sackers Medium 11px, line-height 16px */
+    .intro-quote {
+      font-family: 'Sackers Gothic Std', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      color: var(--text);
+      line-height: 16px;
+      text-align: center;
+    }
+
+    /* ── 02 INVITATION (Figma: horizontal padding ~68px) ── */
+    .invite-section {
+      padding: 152px 68px 130px;
+      text-align: center;
+      background: var(--white);
+    }
+
+    /* 오너먼트: Figma 58×30px */
+    .ornament-img {
+      width: 58px;
+      height: 30px;
+      margin: 0 auto 65px;
+      display: block;
+    }
+
+    /* "예경과 찬영 결혼합니다." — SunBatang Medium 36px */
+    .invite-title {
+      font-family: 'SunBatang', serif;
+      font-size: 36px;
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: -1.8px;
+      margin-bottom: 65px;
+      line-height: normal;
+    }
+
+    /* 본문 — SunBatang Light 25px, line-height 44px */
+    .invite-body {
+      font-family: 'SunBatang', serif;
+      font-size: 25px;
+      font-weight: 300;
+      color: var(--text);
+      line-height: 44px;
+      letter-spacing: -1.25px;
+      margin-bottom: 80px;
+    }
+
+    .parents-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 45px;
+    }
+
+    /* 혼주 이름 — SunBatang Light 28px */
+    .parent-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-family: 'SunBatang', serif;
+      font-size: 28px;
+      font-weight: 300;
+      color: var(--text);
+      line-height: 34px;
+      letter-spacing: -0.84px;
+    }
+
+    .parent-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--text);
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    /* 이름 굵게 — SunBatang Medium */
+    .parent-bold {
+      font-weight: 500;
+    }
+
+    /* 의 아들/딸 */
+    .parent-suffix {
+      font-size: 24px;
+      letter-spacing: -0.72px;
+    }
+
+    /* ── 03 WEDDING DAY (Figma: 버드 88×65, WEDDING DAY 65px, "9" 50px) ── */
+    .wedding-day-section {
+      padding: 196px 60px 150px;
+      text-align: center;
+      background: var(--white);
+    }
+
+    /* 새 일러스트: Figma 88×65px */
+    .bird-icon {
+      width: 88px;
+      height: 65px;
+      object-fit: contain;
+      margin: 0 auto 28px;
+      display: block;
+    }
+
+    /* 섹션 제목 공통 — Sackers Heavy */
+    .section-heading {
+      font-family: 'Sackers Gothic Std', sans-serif;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 48px;
+    }
+
+    /* WEDDING DAY: 65px */
+    .section-heading-lg { font-size: 65px; }
+    /* LOCATION: 55px */
+    .section-heading-md { font-size: 55px; }
+    /* MOMENTS, SEND YOUR WISHES: 34px */
+    .section-heading-sm { font-size: 34px; }
+
+    /* 달력 */
+    .calendar-wrap {
+      width: 524px;
+      margin: 0 auto;
+    }
+
+    /* 월 숫자 "9" — Sackers Heavy 50px */
+    .calendar-month {
+      font-family: 'Sackers Gothic Std', sans-serif;
+      font-size: 50px;
+      font-weight: 900;
+      color: var(--text);
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+    }
+
+    /* Su Mo Tu... — Sackers Medium 30px */
+    .cal-head {
+      font-family: 'Sackers Gothic Std', sans-serif;
+      font-size: 30px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 12px 0;
+    }
+
+    /* 날짜 숫자 — Sackers Medium 30px */
+    .cal-day {
+      font-family: 'Sackers Gothic Std', sans-serif;
+      font-size: 30px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-align: center;
+      padding: 14px 0;
+      position: relative;
+    }
+
+    /* 20일 하이라이트 — Sackers Heavy + 노란 원 */
+    .cal-day.today {
+      color: var(--text-mid);
+      font-weight: 900;
+    }
+
+    .cal-day.today::before {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 65px; height: 65px;
+      border-radius: 50%;
+      background: var(--accent-yellow);
+      z-index: -1;
+    }
+
+    /* 날짜 텍스트 — Sackers Medium 32px */
+    .wedding-date-text {
+      font-family: 'Sackers Gothic Std', sans-serif;
+      font-size: 32px;
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: -0.64px;
+      margin-top: 60px;
+      margin-bottom: 30px;
+    }
+
+    /* D-day 행 — SunBatang Light 24px */
+    .dday-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+      font-family: 'SunBatang', serif;
+      font-size: 24px;
+      font-weight: 300;
+      color: var(--text);
+      line-height: 40px;
+    }
+
+    /* D-day 뱃지 — Sackers Medium 25px */
+    .dday-badge {
+      background: var(--accent-yellow);
+      font-family: 'Sackers Gothic Std', sans-serif;
+      font-size: 25px;
+      font-weight: 500;
+      padding: 10px 15px;
+      color: var(--text);
+    }
+
+    /* ── 04 MOMENTS (Figma: 사진 640×900, 가로 슬라이드) ── */
+    .moments-section {
+      background: var(--white);
+      padding: 217px 0 0;
+    }
+
+    .moments-header {
+      text-align: center;
+      padding: 0 0 60px;
+    }
+
+    /* 가로 슬라이드 컨테이너 */
+    .moments-scroll {
+      display: flex;
+      overflow-x: auto;
+      gap: 30px;
+      padding: 0 75px 0;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .moments-scroll::-webkit-scrollbar { display: none; }
+
+    /* 각 사진: 640×900px */
+    .moment-photo {
+      flex-shrink: 0;
+      width: 640px;
+      height: 900px;
+      background: linear-gradient(135deg, #edebe7 0%, #dedad3 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .moment-photo svg { opacity: 0.25; }
+
+    /* ── 05 LOCATION (Figma: map 800×550, 수평패딩 76px) ── */
+    .location-section {
+      background: var(--white);
+      padding-top: 259px;
+    }
+
+    .location-header {
+      text-align: center;
+      padding: 0 76px 36px;
+    }
+
+    /* "the baily house" — Sackers Medium 38px */
+    .location-venue-en {
+      font-family: 'Sackers Gothic Std', sans-serif;
+      font-size: 38px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      color: var(--text);
+      margin-bottom: 28px;
+    }
+
+    /* "더 베일리하우스 삼성" — Pretendard SemiBold 25px */
+    .location-name-ko {
+      font-family: 'Pretendard', sans-serif;
+      font-size: 25px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 18px;
+    }
+
+    /* 주소 행 — Pretendard Regular 24px */
+    .location-address-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-family: 'Pretendard', sans-serif;
+      font-size: 24px;
+      font-weight: 400;
+      color: var(--text);
+    }
+
+    .location-address-row img {
+      width: 18px;
+      opacity: 0.6;
+    }
+
+    /* 지도: 800×550px */
+    .map-img {
+      width: 100%;
+      height: 550px;
+      object-fit: cover;
+      display: block;
+      margin: 36px 0 0;
+    }
+
+    /* 교통 안내 (Figma 수평패딩 76px) */
+    .transport-wrap {
+      padding: 60px 76px 40px;
+    }
+
+    .transport-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 52px;
+      margin-bottom: 50px;
+      padding-bottom: 50px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .transport-row:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    /* 교통 라벨 — Pretendard SemiBold 26px */
+    .transport-label {
+      font-family: 'Pretendard', sans-serif;
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      min-width: 148px;
+      line-height: 40px;
+    }
+
+    /* 교통 설명 — Pretendard Regular 26px, line-height 40px */
+    .transport-desc {
+      font-family: 'Pretendard', sans-serif;
+      font-size: 26px;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 40px;
+    }
+
+    /* 교통 주의사항 — Pretendard Regular 24px, line-height 34px */
+    .transport-note {
+      font-family: 'Pretendard', sans-serif;
+      font-size: 24px;
+      font-weight: 400;
+      color: #777;
+      line-height: 34px;
+      text-align: center;
+      padding: 0 76px 60px;
+    }
+
+    /* 지도 버튼 3개: height 90px, font 26px */
+    .map-buttons {
+      display: flex;
+      gap: 15px;
+      padding: 0 50px 80px;
+    }
+
+    .map-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      height: 90px;
+      border: 1px solid var(--border-light);
+      border-radius: 5px;
+      background: var(--white);
+      font-family: 'Pretendard', sans-serif;
+      font-size: 26px;
+      font-weight: 400;
+      color: var(--text);
+      text-decoration: none;
+      cursor: pointer;
+      letter-spacing: -0.78px;
+    }
+
+    .map-btn img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      border-radius: 5px;
+    }
+
+    /* ── 06 마음 전하는 곳 (Figma: 수평패딩 54px, 타이틀 50px) ── */
+    .gift-section {
+      padding: 185px 54px 154px;
+      background: var(--white);
+      text-align: center;
+    }
+
+    /* "마음 전하는 곳" — Pretendard Medium 50px */
+    .gift-title {
+      font-family: 'Pretendard', sans-serif;
+      font-size: 50px;
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: -1.5px;
+      margin-bottom: 65px;
+    }
+
+    /* 설명 — Pretendard Regular 26px, line-height 46px */
+    .gift-desc {
+      font-family: 'Pretendard', sans-serif;
+      font-size: 26px;
+      font-weight: 400;
+      color: #555;
+      line-height: 46px;
+      letter-spacing: -0.78px;
+      margin-bottom: 65px;
+    }
+
+    /* 계좌 버튼: height 120px, 28px Medium */
+    .account-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      height: 120px;
+      border-radius: 5px;
+      margin-bottom: 30px;
+      cursor: pointer;
+      border: none;
+      font-family: 'Pretendard', sans-serif;
+      font-size: 28px;
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: -0.84px;
+      transition: opacity 0.15s;
+    }
+
+    .account-btn:hover { opacity: 0.85; }
+    .account-btn.groom { background: var(--accent-blue); }
+    .account-btn.bride { background: var(--accent-lime); }
+
+    /* 신랑 아이콘: 36×40px, 신부 아이콘: 51×60px */
+    .account-btn img.avatar-groom { width: 36px; height: 40px; object-fit: contain; }
+    .account-btn img.avatar-bride { width: 51px; height: 60px; object-fit: contain; }
+
+    .account-btn .chevron { transition: transform 0.25s; }
+    .account-btn.open .chevron { transform: rotate(180deg); }
+
+    .account-panel {
+      display: none;
+      background: #f4f4f4;
+      border-radius: 0 0 5px 5px;
+      padding: 10px 40px 20px;
+      text-align: left;
+      margin-top: -30px;
+      margin-bottom: 30px;
+    }
+
+    .account-panel.open { display: block; }
+
+    .account-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    .account-row:last-child { border-bottom: none; }
+
+    /* 역할 라벨 — Pretendard Regular 17px */
+    .account-who {
+      font-family: 'Pretendard', sans-serif;
+      font-size: 17px;
+      font-weight: 400;
+      color: #aaa;
+      margin-bottom: 8px;
+    }
+
+    /* 계좌번호 — Pretendard Regular 18px */
+    .account-num {
+      font-family: 'Pretendard', sans-serif;
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--text);
+    }
+
+    .copy-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      color: #bbb;
+      transition: color 0.15s;
+      flex-shrink: 0;
+    }
+
+    .copy-btn:hover { color: var(--text); }
+
+    /* ── 07 WISHES (Figma: 수평패딩 50px, 카드 340×340) ── */
+    .wishes-section {
+      padding: 120px 50px 100px;
+      background: var(--white);
+      text-align: center;
+    }
+
+    /* "SEND YOUR WISHES" — Sackers Heavy 34px */
+    .wishes-heading {
+      font-family: 'Sackers Gothic Std', sans-serif;
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      color: var(--text);
+      margin-bottom: 18px;
+    }
+
+    /* 설명 — Pretendard Regular 26px */
+    .wishes-desc {
+      font-family: 'Pretendard', sans-serif;
+      font-size: 26px;
+      font-weight: 400;
+      color: #888;
+      letter-spacing: -0.78px;
+      margin-bottom: 40px;
+    }
+
+    /* 입력 영역 */
+    .wish-input-area {
+      width: 100%;
+      height: 110px;
+      border: 1px solid var(--border);
+      border-radius: 4px 4px 0 0;
+      padding: 20px 24px;
+      font-family: 'Pretendard', sans-serif;
+      font-size: 18px;
+      color: var(--text);
+      resize: none;
+      outline: none;
+      background: var(--white);
+    }
+
+    .wish-input-area::placeholder { color: #ccc; }
+
+    /* 이름 입력 */
+    .wish-name-input {
+      width: 100%;
+      height: 56px;
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0;
+      padding: 0 24px;
+      font-family: 'Pretendard', sans-serif;
+      font-size: 18px;
+      color: var(--text);
+      outline: none;
+      background: var(--white);
+    }
+
+    .wish-name-input::placeholder { color: #ccc; }
+
+    /* 작성하기 버튼 */
+    .wish-submit-btn {
+      width: 100%;
+      height: 110px;
+      margin-top: 0;
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 4px 4px;
+      background: var(--white);
+      font-family: 'Pretendard', sans-serif;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--text);
+      cursor: pointer;
+      letter-spacing: -0.5px;
+      transition: background 0.15s;
+    }
+
+    .wish-submit-btn:hover { background: #f5f5f5; }
+
+    /* 카드 그리드: 340×340 2열 */
+    .wish-cards-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 40px;
+      text-align: left;
+    }
+
+    /* 메모 카드: 340×340 */
+    .wish-card {
+      background: #f2f9c8;
+      border-radius: 10px;
+      padding: 28px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 340px;
+      position: relative;
+    }
+
+    .wish-card-close {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      color: #888;
+      line-height: 1;
+      padding: 2px;
+    }
+
+    .wish-card-close:hover { color: #333; }
+
+    /* 메모 텍스트 — Pretendard Regular 16px */
+    .wish-card-text {
+      font-family: 'Pretendard', sans-serif;
+      font-size: 16px;
+      color: var(--text);
+      line-height: 1.8;
+      padding-right: 20px;
+      flex: 1;
+    }
+
+    /* from. 이름 */
+    .wish-card-from {
+      font-family: 'Pretendard', sans-serif;
+      font-size: 14px;
+      color: #888;
+      text-align: right;
+      margin-top: 16px;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      padding: 40px 76px;
+      text-align: center;
+      background: var(--white);
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .footer-credit {
+      font-family: 'Pretendard', sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      color: #ccc;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- ── 01 INTRO ── -->
+  <div class="intro">
+    <div class="intro-border-outer"></div>
+    <div class="intro-border-inner"></div>
+    <div class="intro-content">
+      <p class="intro-subtitle">the wedding of</p>
+      <div class="intro-names">
+        <span>chanyoung</span>
+        <span class="intro-amp">&amp;</span>
+        <span>yegyeong</span>
+      </div>
+      <img
+        class="intro-illustration"
+        src="https://www.figma.com/api/mcp/asset/736feb55-67d5-457c-a071-c59d5b1eb650"
+        alt="신랑신부 일러스트"
+        width="283"
+        height="300"
+      />
+      <p class="intro-quote">
+        ALL THIS TIME,<br>
+        YOU WERE MY FAMILIAR, MY COMFORT,<br>
+        MY FAVORITE PLACE.<br>
+        AND NOW, MY FOREVER.
+      </p>
+    </div>
+  </div>
+
+  <!-- ── 02 INVITATION TEXT ── -->
+  <section class="invite-section">
+    <img
+      class="ornament-img"
+      src="https://www.figma.com/api/mcp/asset/4c070168-f122-417b-aa0d-f4f64e08fe78"
+      alt=""
+    />
+    <p class="invite-title">예경과 찬영 결혼합니다.</p>
+    <p class="invite-body">
+      오랜 시간 서로의 곁을 지키며<br>
+      가장 편안한 사람이 되었습니다.<br>
+      이제는 같은 곳을 바라보며<br>
+      한 걸음 더 나아가려 합니다.<br>
+      소중한 날, 함께해 주시면 감사하겠습니다.
+    </p>
+    <div class="parents-wrap">
+      <div class="parent-row">
+        <span>조남욱</span>
+        <span class="parent-dot"></span>
+        <span>박은미</span>
+        <span class="parent-suffix">의 아들</span>
+        <span class="parent-bold">찬영</span>
+      </div>
+      <div class="parent-row">
+        <span>황긍돈</span>
+        <span class="parent-dot"></span>
+        <span>김경숙</span>
+        <span class="parent-suffix">의 딸</span>
+        <span class="parent-bold">예경</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 03 WEDDING DAY ── -->
+  <section class="wedding-day-section">
+    <img
+      class="bird-icon"
+      src="https://www.figma.com/api/mcp/asset/907f277b-c607-4ddb-808c-1b2e674c45ea"
+      alt=""
+    />
+    <h2 class="section-heading section-heading-lg">Wedding Day</h2>
+
+    <div class="calendar-wrap">
+      <div class="calendar-month">9</div>
+      <div class="calendar-grid">
+        <div class="cal-head">Su</div>
+        <div class="cal-head">Mo</div>
+        <div class="cal-head">Tu</div>
+        <div class="cal-head">We</div>
+        <div class="cal-head">Th</div>
+        <div class="cal-head">Fr</div>
+        <div class="cal-head">Sa</div>
+        <!-- 2026년 9월: 1일 = 화요일 -->
+        <div class="cal-day"></div>
+        <div class="cal-day"></div>
+        <div class="cal-day">1</div>
+        <div class="cal-day">2</div>
+        <div class="cal-day">3</div>
+        <div class="cal-day">4</div>
+        <div class="cal-day">5</div>
+        <div class="cal-day">6</div>
+        <div class="cal-day">7</div>
+        <div class="cal-day">8</div>
+        <div class="cal-day">9</div>
+        <div class="cal-day">10</div>
+        <div class="cal-day">11</div>
+        <div class="cal-day">12</div>
+        <div class="cal-day">13</div>
+        <div class="cal-day">14</div>
+        <div class="cal-day">15</div>
+        <div class="cal-day">16</div>
+        <div class="cal-day">17</div>
+        <div class="cal-day">18</div>
+        <div class="cal-day">19</div>
+        <!-- 20일: 결혼식 당일 (일요일) -->
+        <div class="cal-day today">20</div>
+        <div class="cal-day">21</div>
+        <div class="cal-day">22</div>
+        <div class="cal-day">23</div>
+        <div class="cal-day">24</div>
+        <div class="cal-day">25</div>
+        <div class="cal-day">26</div>
+        <div class="cal-day">27</div>
+        <div class="cal-day">28</div>
+        <div class="cal-day">29</div>
+        <div class="cal-day">30</div>
+        <div class="cal-day"></div>
+        <div class="cal-day"></div>
+        <div class="cal-day"></div>
+      </div>
+    </div>
+
+    <p class="wedding-date-text">2026년 9월 20일 오전 11시</p>
+    <div class="dday-row">
+      <span>결혼식까지</span>
+      <span class="dday-badge" id="dday-badge">D-<span id="dday-num">?</span></span>
+      <span>남았어요.</span>
+    </div>
+  </section>
+
+  <!-- ── 04 MOMENTS ── -->
+  <div class="moments-section">
+    <div class="moments-header">
+      <h2 class="section-heading section-heading-lg">Moments</h2>
+    </div>
+    <div class="moments-scroll">
+      <div class="moment-photo">
+        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#b0a898" stroke-width="0.8">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <polyline points="21 15 16 10 5 21"/>
+        </svg>
+      </div>
+      <div class="moment-photo">
+        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#b0a898" stroke-width="0.8">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <polyline points="21 15 16 10 5 21"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 05 LOCATION ── -->
+  <div class="location-section">
+    <div class="location-header">
+      <h2 class="section-heading section-heading-md">Location</h2>
+      <p class="location-venue-en">The Baily House</p>
+      <p class="location-name-ko">더 베일리하우스 삼성</p>
+      <div class="location-address-row">
+        <img src="https://www.figma.com/api/mcp/asset/d525128c-cda7-4794-9ebb-fe4c9141ccd0" alt="" style="cursor:pointer;" onclick="copyText('서울 강남구 영동대로 506')" />
+        <span>서울 강남구 영동대로 506</span>
+      </div>
+    </div>
+
+    <a href="https://naver.me/I55aZqB6" target="_blank">
+      <img
+        class="map-img"
+        src="map.png"
+        alt="지도"
+        style="cursor:pointer;"
+      />
+    </a>
+
+    <div class="transport-wrap">
+      <div class="transport-row">
+        <span class="transport-label">지하철 이용 시</span>
+        <span class="transport-desc">지하철 2호선 삼성역 7번출구 도보 1분</span>
+      </div>
+      <div class="transport-row">
+        <span class="transport-label">버스 이용 시</span>
+        <div class="transport-desc">
+          삼성역 7번출구에서 하차<br>
+          [간선(파랑)] 143, 146, 301, 342, 343, 345, 401, 8146, N61(심야)<br>
+          [지선(초록)] 2413, 2415, 3217, 3412, 3414, 3417, 4318<br>
+          [광역(빨강)] 9407, 9507, 9607
+        </div>
+      </div>
+      <div class="transport-row">
+        <span class="transport-label">주차 이용 시</span>
+        <span class="transport-desc">주차는 더베일리하우스 앞에서<br>안내 받으시기 바랍니다.</span>
+      </div>
+    </div>
+
+    <p class="transport-note">
+      더베일리하우스는 대중교통을 이용하시기 매우 편리합니다.<br>
+      주변 교통이 혼잡하여 주차 시간이 많이 소요될 수 있으니<br>
+      가급적 편리한 대중교통을 이용해 주시기 바랍니다.
+    </p>
+
+    <div class="map-buttons">
+      <a class="map-btn" href="https://naver.me/I55aZqB6" target="_blank">
+        <img src="https://www.figma.com/api/mcp/asset/e6c394ac-0e55-455e-a416-9908465578f9" alt="" />
+        네이버지도
+      </a>
+      <a class="map-btn" href="https://kko.to/nDGBGzKqvW" target="_blank">
+        <img src="https://www.figma.com/api/mcp/asset/ea1485a2-e38d-4957-a266-7cfac455e4e0" alt="" />
+        카카오맵
+      </a>
+      <a class="map-btn" href="https://tmap.life/f66632d7" target="_blank">
+        <img src="https://www.figma.com/api/mcp/asset/63bae509-0100-489d-8cd7-3e6c93772b0c" alt="" />
+        티맵
+      </a>
+    </div>
+  </div>
+
+  <!-- ── 06 마음 전하는 곳 ── -->
+  <section class="gift-section">
+    <h2 class="gift-title">마음 전하는 곳</h2>
+    <p class="gift-desc">
+      참석이 어려우신 분들을 위해 기재했습니다.<br>
+      너그러운 마음으로 양해 부탁드립니다.
+    </p>
+
+    <button class="account-btn groom" onclick="toggleAccount('groom', this)">
+      <img class="avatar-groom" src="https://www.figma.com/api/mcp/asset/bfc53e56-5a81-4fc0-99a0-1ade94d369f4" alt="" />
+      신랑 측 계좌번호
+      <svg class="chevron" width="14" height="8" viewBox="0 0 14 8" fill="none">
+        <path d="M1 1L7 7L13 1" stroke="#555" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="account-panel" id="panel-groom">
+      <div class="account-row">
+        <div>
+          <div class="account-who">신랑</div>
+          <div class="account-num">조찬영 &nbsp;·&nbsp; 155-910334-24507 하나</div>
+        </div>
+        <button class="copy-btn" onclick="copyText('155-910334-24507')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="9" y="9" width="13" height="13" rx="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+        </button>
+      </div>
+      <div class="account-row">
+        <div>
+          <div class="account-who">혼주</div>
+          <div class="account-num">조남욱 &nbsp;·&nbsp; 155-910334-24507 하나</div>
+        </div>
+        <button class="copy-btn" onclick="copyText('155-910334-24507')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="9" y="9" width="13" height="13" rx="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+        </button>
+      </div>
+      <div class="account-row">
+        <div>
+          <div class="account-who">혼주</div>
+          <div class="account-num">박은미 &nbsp;·&nbsp; 155-910334-24507 하나</div>
+        </div>
+        <button class="copy-btn" onclick="copyText('155-910334-24507')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="9" y="9" width="13" height="13" rx="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <button class="account-btn bride" onclick="toggleAccount('bride', this)">
+      <img class="avatar-bride" src="https://www.figma.com/api/mcp/asset/ebe64836-9f34-4460-af42-905a2ff3f592" alt="" />
+      신부 측 계좌번호
+      <svg class="chevron" width="14" height="8" viewBox="0 0 14 8" fill="none">
+        <path d="M1 1L7 7L13 1" stroke="#555" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <div class="account-panel" id="panel-bride">
+      <div class="account-row">
+        <div>
+          <div class="account-who">신부</div>
+          <div class="account-num">황예경 &nbsp;·&nbsp; 501602-01-276833 국민</div>
+        </div>
+        <button class="copy-btn" onclick="copyText('501602-01-276833')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="9" y="9" width="13" height="13" rx="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+        </button>
+      </div>
+      <div class="account-row">
+        <div>
+          <div class="account-who">혼주</div>
+          <div class="account-num">황긍돈 &nbsp;·&nbsp; 155-910334-24507 하나</div>
+        </div>
+        <button class="copy-btn" onclick="copyText('155-910334-24507')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="9" y="9" width="13" height="13" rx="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+        </button>
+      </div>
+      <div class="account-row">
+        <div>
+          <div class="account-who">혼주</div>
+          <div class="account-num">김경숙 &nbsp;·&nbsp; 155-910334-24507 카카오</div>
+        </div>
+        <button class="copy-btn" onclick="copyText('155-910334-24507')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="9" y="9" width="13" height="13" rx="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 07 WISHES ── -->
+  <section class="wishes-section">
+    <h2 class="wishes-heading">Send Your Wishes</h2>
+    <p class="wishes-desc">신랑·신부에게 축하의 한 마디를 남겨주세요!</p>
+    <div style="display:flex; flex-direction:column;">
+      <textarea class="wish-input-area" id="wish-text" placeholder="축하 메시지를 입력해주세요..."></textarea>
+      <input class="wish-name-input" id="wish-name" type="text" placeholder="이름을 입력해주세요" />
+      <button class="wish-submit-btn" onclick="addWish()">작성하기</button>
+    </div>
+
+    <div class="wish-cards-grid" id="wish-grid">
+      <div class="wish-card">
+        <button class="wish-card-close" onclick="removeWish(this)">×</button>
+        <p class="wish-card-text">예경아 행복하게 잘 살아 ❤️❤️</p>
+        <p class="wish-card-from">from. 희진</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <div class="footer">
+    <p class="footer-credit">디자인 · 예경 &nbsp;&nbsp; 글, 그림 · 찬영</p>
+  </div>
+
+</div>
+
+<script>
+  // D-day 자동 계산
+  (function () {
+    var wedding = new Date('2026-09-20T00:00:00');
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var diff = Math.ceil((wedding - today) / 86400000);
+    var el = document.getElementById('dday-num');
+    if (el) el.textContent = diff > 0 ? diff : (diff === 0 ? 'DAY' : 0);
+  })();
+
+  // 메모 카드 추가
+  function addWish() {
+    var text = document.getElementById('wish-text').value.trim();
+    var name = document.getElementById('wish-name').value.trim();
+    if (!text) { showToast('메시지를 입력해주세요.'); return; }
+    if (!name) { showToast('이름을 입력해주세요.'); return; }
+    var grid = document.getElementById('wish-grid');
+    var card = document.createElement('div');
+    card.className = 'wish-card';
+    card.innerHTML =
+      '<button class="wish-card-close" onclick="removeWish(this)">×</button>' +
+      '<p class="wish-card-text">' + escapeHtml(text) + '</p>' +
+      '<p class="wish-card-from">from. ' + escapeHtml(name) + '</p>';
+    grid.insertBefore(card, grid.firstChild);
+    document.getElementById('wish-text').value = '';
+    document.getElementById('wish-name').value = '';
+    showToast('메시지가 등록되었습니다.');
+  }
+
+  function removeWish(btn) {
+    btn.closest('.wish-card').remove();
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+  }
+
+  // 계좌 아코디언
+  function toggleAccount(side, btn) {
+    var panel = document.getElementById('panel-' + side);
+    var isOpen = panel.classList.toggle('open');
+    btn.classList.toggle('open', isOpen);
+  }
+
+  // 계좌번호 복사
+  function copyText(text) {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(function () {
+        showToast('복사되었습니다.');
+      });
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('복사되었습니다.');
+    }
+  }
+
+  function showToast(msg) {
+    var t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = 'position:fixed;bottom:40px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-family:sans-serif;z-index:9999;opacity:0;transition:opacity 0.2s';
+    document.body.appendChild(t);
+    requestAnimationFrame(function () {
+      t.style.opacity = '1';
+      setTimeout(function () {
+        t.style.opacity = '0';
+        setTimeout(function () { document.body.removeChild(t); }, 200);
+      }, 1800);
+    });
+  }
+</script>
+</body>
+</html>
