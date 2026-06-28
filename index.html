@@ -335,10 +335,22 @@
       position: relative;
     }
 
+    @keyframes sparkle-circle {
+      0%   { transform: translate(-50%, -50%) scale(1);    box-shadow: 0 0 0px 0px rgba(235, 237, 147, 0); }
+      50%  { transform: translate(-50%, -50%) scale(1.12); box-shadow: 0 0 18px 8px rgba(235, 237, 147, 0.6); }
+      100% { transform: translate(-50%, -50%) scale(1);    box-shadow: 0 0 0px 0px rgba(235, 237, 147, 0); }
+    }
+
+    @keyframes sparkle-text {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.75; }
+    }
+
     /* 20일 하이라이트 — Sackers Heavy + 노란 원 */
     .cal-day.today {
       color: var(--text-mid);
       font-weight: 900;
+      animation: sparkle-text 2.8s ease-in-out infinite;
     }
 
     .cal-day.today::before {
@@ -350,6 +362,7 @@
       border-radius: 50%;
       background: var(--accent-yellow);
       z-index: -1;
+      animation: sparkle-circle 2.8s ease-in-out infinite;
     }
 
     /* 날짜 텍스트 — Sackers Medium 32px */
@@ -409,19 +422,56 @@
 
     .moments-scroll::-webkit-scrollbar { display: none; }
 
-    /* 각 사진: 640×900px */
-    .moment-photo {
-      flex-shrink: 0;
-      width: 640px;
-      height: 900px;
-      background: linear-gradient(135deg, #edebe7 0%, #dedad3 100%);
-      border-radius: 8px;
+    /* 화살표 버튼 */
+    .moments-arrows {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 32px 0 60px 63px;
+    }
+
+    .moments-arrow-btn {
+      width: 56px;
+      height: 56px;
+      border: none;
+      background: none;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: opacity 0.2s;
     }
 
-    .moment-photo svg { opacity: 0.25; }
+    .moments-arrow-btn:hover { opacity: 0.5; }
+
+    /* 사진 슬라이드 */
+    .moment-photo {
+      flex-shrink: 0;
+      width: 640px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      filter: brightness(0.45);
+      opacity: 1;
+      transition: filter 0.5s ease, opacity 0.5s ease;
+    }
+
+    .moment-photo.active {
+      filter: brightness(1);
+      opacity: 1;
+    }
+
+    .moment-photo.past {
+      opacity: 0;
+      filter: brightness(1);
+    }
+
+    .moment-photo img {
+      width: 640px;
+      height: auto;
+      display: block;
+      border-radius: 10px;
+    }
 
     /* ── 05 LOCATION (Figma: map 800×550, 수평패딩 76px) ── */
     .location-section {
@@ -434,11 +484,11 @@
       padding: 0 76px 36px;
     }
 
-    /* "the baily house" — Sackers Medium 38px */
+    /* "THE BAILY HOUSE" — Sackers Heavy 38px */
     .location-venue-en {
       font-family: 'Sackers Gothic Std', sans-serif;
       font-size: 38px;
-      font-weight: 500;
+      font-weight: 900;
       letter-spacing: 1px;
       color: var(--text);
       margin-bottom: 28px;
@@ -812,8 +862,8 @@
     /* ── 스크롤 등장 애니메이션 ── */
     .reveal {
       opacity: 0;
-      transform: translateY(60px);
-      transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1), transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(80px);
+      transition: opacity 2.2s cubic-bezier(0.16, 1, 0.3, 1), transform 2.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .reveal.visible {
@@ -856,6 +906,21 @@
 
     .music-btn.playing .icon-on {
       animation: spin 4s linear infinite;
+    }
+
+    /* ── 스크롤 스냅 ── */
+    html {
+      scroll-snap-type: y mandatory;
+    }
+
+    .intro,
+    .invite-section,
+    .wedding-day-section,
+    .moments-section,
+    .location-section,
+    .gift-section,
+    .wishes-section {
+      scroll-snap-align: start;
     }
 
     /* ── FOOTER ── */
@@ -920,7 +985,7 @@
   </div>
 
   <!-- ── 02 INVITATION TEXT ── -->
-  <section class="invite-section reveal">
+  <section class="invite-section">
     <img
       class="ornament-img"
       src="https://www.figma.com/api/mcp/asset/4c070168-f122-417b-aa0d-f4f64e08fe78"
@@ -959,7 +1024,7 @@
       src="https://www.figma.com/api/mcp/asset/907f277b-c607-4ddb-808c-1b2e674c45ea"
       alt=""
     />
-    <h2 class="section-heading section-heading-lg">WEDDING DAY</h2>
+    <h2 class="section-heading section-heading-lg">wedding day</h2>
 
     <div class="calendar-wrap">
       <div class="calendar-month">9</div>
@@ -1022,31 +1087,45 @@
   <!-- ── 04 MOMENTS ── -->
   <div class="moments-section reveal">
     <div class="moments-header">
-      <h2 class="section-heading section-heading-lg">MOMENTS</h2>
+      <img
+        src="https://www.figma.com/api/mcp/asset/6ca1b7d4-6e50-4d78-84dc-07321da89764"
+        alt=""
+        style="width:67px; height:89px; display:block; margin:0 auto 28px;"
+      />
+      <h2 class="section-heading section-heading-lg">moments</h2>
     </div>
     <div class="moments-scroll">
-      <div class="moment-photo">
-        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#b0a898" stroke-width="0.8">
-          <rect x="3" y="3" width="18" height="18" rx="2"/>
-          <circle cx="8.5" cy="8.5" r="1.5"/>
-          <polyline points="21 15 16 10 5 21"/>
+      <div class="moment-photo"><img src="사진01.jpeg" alt="사진01"></div>
+      <div class="moment-photo"><img src="사진02.jpeg" alt="사진02"></div>
+      <div class="moment-photo"><img src="사진03.jpeg" alt="사진03"></div>
+      <div class="moment-photo"><img src="사진04.jpeg" alt="사진04"></div>
+      <div class="moment-photo"><img src="사진05.jpeg" alt="사진05"></div>
+      <div class="moment-photo"><img src="사진06.jpeg" alt="사진06"></div>
+      <div class="moment-photo"><img src="사진07.jpeg" alt="사진07"></div>
+      <div class="moment-photo"><img src="사진08.jpeg" alt="사진08"></div>
+      <div class="moment-photo"><img src="사진09.jpeg" alt="사진09"></div>
+      <div class="moment-photo"><img src="사진10.jpeg" alt="사진10"></div>
+    </div>
+    <!-- 좌우 화살표 -->
+    <div class="moments-arrows">
+      <button class="moments-arrow-btn" onclick="scrollMoments(-1)">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c0c0c0" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
         </svg>
-      </div>
-      <div class="moment-photo">
-        <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#b0a898" stroke-width="0.8">
-          <rect x="3" y="3" width="18" height="18" rx="2"/>
-          <circle cx="8.5" cy="8.5" r="1.5"/>
-          <polyline points="21 15 16 10 5 21"/>
+      </button>
+      <button class="moments-arrow-btn" onclick="scrollMoments(1)">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c0c0c0" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"/>
         </svg>
-      </div>
+      </button>
     </div>
   </div>
 
   <!-- ── 05 LOCATION ── -->
   <div class="location-section reveal">
     <div class="location-header">
-      <h2 class="section-heading section-heading-md">LOCATION</h2>
-      <p class="location-venue-en">THE BAILY HOUSE</p>
+      <h2 class="section-heading section-heading-md">location</h2>
+      <p class="location-venue-en">the baily house</p>
       <p class="location-name-ko">더 베일리하우스 삼성</p>
       <div class="location-address-row">
         <img src="https://www.figma.com/api/mcp/asset/d525128c-cda7-4794-9ebb-fe4c9141ccd0" alt="" style="cursor:pointer;" onclick="copyText('서울 강남구 영동대로 506')" />
@@ -1208,7 +1287,7 @@
 
   <!-- ── 07 WISHES ── -->
   <section class="wishes-section reveal">
-    <h2 class="wishes-heading">SEND YOUR WISHES</h2>
+    <h2 class="wishes-heading">send your wishes</h2>
     <p class="wishes-desc">신랑·신부에게 축하의 한 마디를 남겨주세요!</p>
     <div style="display:flex; flex-direction:column;">
       <textarea class="wish-input-area" id="wish-text" placeholder="축하 메시지를 입력해주세요..."></textarea>
@@ -1324,6 +1403,41 @@
       btn.classList.remove('playing');
     }
   }
+
+  // 사진 화살표 스크롤
+  var currentMomentIndex = 0;
+
+  function updateMomentDim() {
+    var photos = document.querySelectorAll('.moment-photo');
+    photos.forEach(function (p, i) {
+      p.classList.toggle('active', i === currentMomentIndex);
+      p.classList.toggle('past', i < currentMomentIndex);
+    });
+  }
+
+  function scrollMoments(dir) {
+    var el = document.querySelector('.moments-scroll');
+    var photos = document.querySelectorAll('.moment-photo');
+    currentMomentIndex = Math.max(0, Math.min(photos.length - 1, currentMomentIndex + dir));
+    var itemWidth = photos[0].offsetWidth + 30;
+    el.scrollTo({ left: currentMomentIndex * itemWidth, behavior: 'smooth' });
+    updateMomentDim();
+  }
+
+  updateMomentDim();
+
+  // 세로형 사진 최대 높이 기준으로 컨테이너 높이 통일
+  window.addEventListener('load', function () {
+    var imgs = document.querySelectorAll('.moment-photo img');
+    var maxH = 0;
+    imgs.forEach(function (img) {
+      var h = img.naturalHeight * (640 / img.naturalWidth);
+      if (h > maxH) maxH = h;
+    });
+    document.querySelectorAll('.moment-photo').forEach(function (p) {
+      p.style.height = maxH + 'px';
+    });
+  });
 
   // 스크롤 등장 애니메이션
   (function () {
