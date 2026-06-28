@@ -908,21 +908,6 @@
       animation: spin 4s linear infinite;
     }
 
-    /* ── 스크롤 스냅 ── */
-    html {
-      scroll-snap-type: y mandatory;
-    }
-
-    .intro,
-    .invite-section,
-    .wedding-day-section,
-    .moments-section,
-    .location-section,
-    .gift-section,
-    .wishes-section {
-      scroll-snap-align: start;
-    }
-
     /* ── FOOTER ── */
     .footer {
       padding: 40px 76px;
@@ -1472,6 +1457,35 @@
     }
     scalePhone();
     window.addEventListener('resize', scalePhone);
+  })();
+
+  // 섹션 스크롤 스냅
+  (function () {
+    var snapSels = ['.intro', '.invite-section', '.wedding-day-section', '.moments-section', '.location-section', '.gift-section', '.wishes-section'];
+    var timer, busy = false;
+
+    window.addEventListener('scroll', function () {
+      if (busy) return;
+      clearTimeout(timer);
+      timer = setTimeout(doSnap, 150);
+    }, { passive: true });
+
+    function doSnap() {
+      var sy = window.pageYOffset;
+      var best = null, bestDist = Infinity;
+      snapSels.forEach(function (sel) {
+        var el = document.querySelector(sel);
+        if (!el) return;
+        var top = el.getBoundingClientRect().top + sy;
+        var d = Math.abs(sy - top);
+        if (d < bestDist) { bestDist = d; best = top; }
+      });
+      if (best !== null && bestDist > 1) {
+        busy = true;
+        window.scrollTo({ top: best, behavior: 'smooth' });
+        setTimeout(function () { busy = false; }, 800);
+      }
+    }
   })();
 
   function showToast(msg) {
