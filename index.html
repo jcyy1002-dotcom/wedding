@@ -139,10 +139,32 @@
       font-size: 20px;
     }
 
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .name-slide-up {
+      display: inline-block;
+      opacity: 0;
+      animation: slideUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+    }
+
+    .name-slide-down {
+      display: inline-block;
+      opacity: 0;
+      animation: slideDown 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+    }
+
     /* 일러스트: Figma 283×300px */
     .intro-illustration {
-      width: 283px;
-      height: 300px;
+      width: 566px;
+      height: 600px;
       object-fit: contain;
       margin: 60px auto 60px;
       display: block;
@@ -157,6 +179,10 @@
       color: var(--text);
       line-height: 16px;
       text-align: center;
+      position: absolute;
+      bottom: 55px;
+      left: 0;
+      right: 0;
     }
 
     /* ── 02 INVITATION (Figma: horizontal padding ~68px) ── */
@@ -783,6 +809,55 @@
       margin-top: 16px;
     }
 
+    /* ── 스크롤 등장 애니메이션 ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(60px);
+      transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1), transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── 배경음악 버튼 ── */
+    .music-btn {
+      position: absolute;
+      top: 50px;
+      right: 50px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(6px);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      transition: opacity 0.2s;
+    }
+
+    .music-btn:hover { opacity: 0.8; }
+
+    .music-btn svg { display: block; }
+
+    .music-btn.off .icon-on  { display: none; }
+    .music-btn.off .icon-off { display: block; }
+    .music-btn .icon-off { display: none; }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+
+    .music-btn.playing .icon-on {
+      animation: spin 4s linear infinite;
+    }
+
     /* ── FOOTER ── */
     .footer {
       padding: 40px 76px;
@@ -807,31 +882,45 @@
   <div class="intro">
     <div class="intro-border-outer"></div>
     <div class="intro-border-inner"></div>
+    <!-- 배경음악 버튼 -->
+    <button class="music-btn" id="music-btn" onclick="toggleMusic()" title="배경음악">
+      <svg class="icon-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 18V5l12-2v13"/>
+        <circle cx="6" cy="18" r="3"/>
+        <circle cx="18" cy="16" r="3"/>
+      </svg>
+      <svg class="icon-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 18V5l12-2v13"/>
+        <circle cx="6" cy="18" r="3"/>
+        <circle cx="18" cy="16" r="3"/>
+        <line x1="2" y1="2" x2="22" y2="22"/>
+      </svg>
+    </button>
     <div class="intro-content">
       <p class="intro-subtitle">the wedding of</p>
       <div class="intro-names">
-        <span>chanyoung</span>
+        <span class="name-slide-up">chanyoung</span>
         <span class="intro-amp">&amp;</span>
-        <span>yegyeong</span>
+        <span class="name-slide-down">yegyeong</span>
       </div>
       <img
         class="intro-illustration"
         src="motion.gif"
         alt="신랑신부 일러스트"
-        width="283"
-        height="300"
+        width="566"
+        height="600"
       />
-      <p class="intro-quote">
-        ALL THIS TIME,<br>
-        YOU WERE MY FAMILIAR, MY COMFORT,<br>
-        MY FAVORITE PLACE.<br>
-        AND NOW, MY FOREVER.
-      </p>
     </div>
+    <p class="intro-quote">
+      ALL THIS TIME,<br>
+      YOU WERE MY FAMILIAR, MY COMFORT,<br>
+      MY FAVORITE PLACE.<br>
+      AND NOW, MY FOREVER.
+    </p>
   </div>
 
   <!-- ── 02 INVITATION TEXT ── -->
-  <section class="invite-section">
+  <section class="invite-section reveal">
     <img
       class="ornament-img"
       src="https://www.figma.com/api/mcp/asset/4c070168-f122-417b-aa0d-f4f64e08fe78"
@@ -864,13 +953,13 @@
   </section>
 
   <!-- ── 03 WEDDING DAY ── -->
-  <section class="wedding-day-section">
+  <section class="wedding-day-section reveal">
     <img
       class="bird-icon"
       src="https://www.figma.com/api/mcp/asset/907f277b-c607-4ddb-808c-1b2e674c45ea"
       alt=""
     />
-    <h2 class="section-heading section-heading-lg">Wedding Day</h2>
+    <h2 class="section-heading section-heading-lg">WEDDING DAY</h2>
 
     <div class="calendar-wrap">
       <div class="calendar-month">9</div>
@@ -931,9 +1020,9 @@
   </section>
 
   <!-- ── 04 MOMENTS ── -->
-  <div class="moments-section">
+  <div class="moments-section reveal">
     <div class="moments-header">
-      <h2 class="section-heading section-heading-lg">Moments</h2>
+      <h2 class="section-heading section-heading-lg">MOMENTS</h2>
     </div>
     <div class="moments-scroll">
       <div class="moment-photo">
@@ -954,10 +1043,10 @@
   </div>
 
   <!-- ── 05 LOCATION ── -->
-  <div class="location-section">
+  <div class="location-section reveal">
     <div class="location-header">
-      <h2 class="section-heading section-heading-md">Location</h2>
-      <p class="location-venue-en">The Baily House</p>
+      <h2 class="section-heading section-heading-md">LOCATION</h2>
+      <p class="location-venue-en">THE BAILY HOUSE</p>
       <p class="location-name-ko">더 베일리하우스 삼성</p>
       <div class="location-address-row">
         <img src="https://www.figma.com/api/mcp/asset/d525128c-cda7-4794-9ebb-fe4c9141ccd0" alt="" style="cursor:pointer;" onclick="copyText('서울 강남구 영동대로 506')" />
@@ -1017,7 +1106,7 @@
   </div>
 
   <!-- ── 06 마음 전하는 곳 ── -->
-  <section class="gift-section">
+  <section class="gift-section reveal">
     <h2 class="gift-title">마음 전하는 곳</h2>
     <p class="gift-desc">
       참석이 어려우신 분들을 위해 기재했습니다.<br>
@@ -1118,8 +1207,8 @@
   </section>
 
   <!-- ── 07 WISHES ── -->
-  <section class="wishes-section">
-    <h2 class="wishes-heading">Send Your Wishes</h2>
+  <section class="wishes-section reveal">
+    <h2 class="wishes-heading">SEND YOUR WISHES</h2>
     <p class="wishes-desc">신랑·신부에게 축하의 한 마디를 남겨주세요!</p>
     <div style="display:flex; flex-direction:column;">
       <textarea class="wish-input-area" id="wish-text" placeholder="축하 메시지를 입력해주세요..."></textarea>
@@ -1204,6 +1293,53 @@
       showToast('복사되었습니다.');
     }
   }
+
+  // 배경음악
+  var musicPlaying = false;
+  var audio = new Audio('music.mp3'); // 음악 파일명 여기서 변경
+  audio.loop = true;
+
+  // 페이지 로드 시 자동재생 시도
+  window.addEventListener('load', function () {
+    audio.play().then(function () {
+      musicPlaying = true;
+      document.getElementById('music-btn').classList.add('playing');
+    }).catch(function () {
+      // 브라우저가 자동재생 차단한 경우 꺼진 상태로 표시
+      musicPlaying = false;
+      document.getElementById('music-btn').classList.add('off');
+    });
+  });
+
+  function toggleMusic() {
+    var btn = document.getElementById('music-btn');
+    musicPlaying = !musicPlaying;
+    if (musicPlaying) {
+      audio.play();
+      btn.classList.remove('off');
+      btn.classList.add('playing');
+    } else {
+      audio.pause();
+      btn.classList.add('off');
+      btn.classList.remove('playing');
+    }
+  }
+
+  // 스크롤 등장 애니메이션
+  (function () {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.05 });
+
+    document.querySelectorAll('.reveal').forEach(function (el) {
+      observer.observe(el);
+    });
+  })();
 
   // 모바일 화면에 맞게 자동 축소
   (function () {
