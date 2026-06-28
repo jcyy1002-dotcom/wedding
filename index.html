@@ -344,9 +344,9 @@
     }
 
     @keyframes sparkle-circle {
-      0%   { transform: translate(-50%, -50%) scale(1);    box-shadow: 0 0 0px 0px rgba(235, 237, 147, 0); }
-      50%  { transform: translate(-50%, -50%) scale(1.12); box-shadow: 0 0 18px 8px rgba(235, 237, 147, 0.6); }
-      100% { transform: translate(-50%, -50%) scale(1);    box-shadow: 0 0 0px 0px rgba(235, 237, 147, 0); }
+      0%   { transform: translate(-50%, -50%) scale(1);    box-shadow: 0 0 0px 0px rgba(212, 175, 55, 0); }
+      50%  { transform: translate(-50%, -50%) scale(1.12); box-shadow: 0 0 22px 10px rgba(212, 175, 55, 0.55); }
+      100% { transform: translate(-50%, -50%) scale(1);    box-shadow: 0 0 0px 0px rgba(212, 175, 55, 0); }
     }
 
     @keyframes sparkle-text {
@@ -1286,7 +1286,7 @@
           <div class="account-num">조찬영 &nbsp;·&nbsp; 155-910334-24507 하나</div>
         </div>
         <button class="copy-btn" onclick="copyText('155-910334-24507')">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <rect x="9" y="9" width="13" height="13" rx="2"/>
             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
           </svg>
@@ -1308,7 +1308,7 @@
           <div class="account-num">황예경 &nbsp;·&nbsp; 501602-01-276833 국민</div>
         </div>
         <button class="copy-btn" onclick="copyText('501602-01-276833')">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <rect x="9" y="9" width="13" height="13" rx="2"/>
             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
           </svg>
@@ -1336,7 +1336,7 @@
   <div class="wish-modal-overlay" id="wish-modal-overlay" onclick="closeWishModalOutside(event)">
     <div class="wish-modal">
       <button class="wish-modal-close" onclick="closeWishModal()">×</button>
-      <p class="wish-modal-title">축하 메시지 남기기</p>
+      <p class="wish-modal-title">찬영&amp;예경에게 축하메시지 남기기</p>
       <textarea class="wish-input-area" id="wish-text" placeholder="축하메시지를 남겨주세요."></textarea>
       <input class="wish-name-input" id="wish-name" type="text" placeholder="이름을 입력해주세요." />
       <input class="wish-pw-input" id="wish-pw" type="password" placeholder="비밀번호를 설정해주세요." />
@@ -1546,7 +1546,7 @@
   function showToast(msg) {
     var t = document.createElement('div');
     t.textContent = msg;
-    t.style.cssText = 'position:fixed;bottom:40px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-family:sans-serif;z-index:9999;opacity:0;transition:opacity 0.2s';
+    t.style.cssText = 'position:fixed;bottom:40px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:10px 20px;border-radius:20px;font-size:22px;font-family:sans-serif;z-index:9999;opacity:0;transition:opacity 0.2s';
     document.body.appendChild(t);
     requestAnimationFrame(function () {
       t.style.opacity = '1';
