@@ -1464,6 +1464,39 @@
     if (el) el.textContent = diff > 0 ? diff : (diff === 0 ? 'DAY' : 0);
   })();
 
+  // ===== 축하메시지 저장소 (chat과 동일한 구글 시트 연동) =====
+  var SHEET_API = 'https://script.google.com/macros/s/AKfycbxzobOEev_gW3UGqXZcFuaWJAwwRZSZ3hI6TBE_Epq8W9DVI3Lip_ieZ-8PE1M5SC37AA/exec';
+
+  function api(params) {
+    var url = SHEET_API + '?' + new URLSearchParams(params).toString() + '&_=' + Date.now();
+    return fetch(url, { method: 'GET' }).then(function (r) { return r.json(); });
+  }
+
+  // 카드 한 장 만들어 맨 앞에 추가
+  function prependWishCard(m) {
+    var grid = document.getElementById('wish-grid');
+    var card = document.createElement('div');
+    card.className = 'wish-card';
+    if (m.id) card.dataset.id = m.id;
+    card.innerHTML =
+      '<button class="wish-card-close" onclick="removeWish(this)">×</button>' +
+      '<p class="wish-card-text">' + escapeHtml(m.text) + '</p>' +
+      '<p class="wish-card-from">from. ' + escapeHtml(m.name || '하객') + '</p>';
+    grid.insertBefore(card, grid.firstChild);
+  }
+
+  // 저장된 축하메시지 불러오기 (chat에서 쓴 것도 함께 표시됨)
+  function loadWishes() {
+    if (!SHEET_API) return;
+    api({ action: 'list' }).then(function (r) {
+      if (r && r.ok && r.messages) {
+        // 서버는 오래된→최신 순. 순서대로 prepend하면 최신이 맨 위에 옴
+        r.messages.forEach(function (m) { prependWishCard(m); });
+      }
+    }).catch(function () {});
+  }
+  loadWishes();
+
   // 모달 열기/닫기
   function openWishModal() {
     document.getElementById('wish-modal-overlay').classList.add('open');
@@ -1478,7 +1511,8 @@
     if (e.target === document.getElementById('wish-modal-overlay')) closeWishModal();
   }
 
-  // 메모 카드 추가
+  // 메모 카드 추가 (구글 시트에 저장 → chat과 공유)
+  var wishSubmitting = false;
   function addWish() {
     var text = document.getElementById('wish-text').value.trim();
     var name = document.getElementById('wish-name').value.trim();
@@ -1486,33 +1520,44 @@
     if (!text) { showToast('메시지를 입력해주세요.'); return; }
     if (!name) { showToast('이름을 입력해주세요.'); return; }
     if (!pw) { showToast('비밀번호를 설정해주세요.'); return; }
-    var grid = document.getElementById('wish-grid');
-    var card = document.createElement('div');
-    card.className = 'wish-card';
-    card.dataset.pw = pw;
-    card.innerHTML =
-      '<button class="wish-card-close" onclick="removeWish(this)">×</button>' +
-      '<p class="wish-card-text">' + escapeHtml(text) + '</p>' +
-      '<p class="wish-card-from">from. ' + escapeHtml(name) + '</p>';
-    grid.insertBefore(card, grid.firstChild);
-    document.getElementById('wish-text').value = '';
-    document.getElementById('wish-name').value = '';
-    document.getElementById('wish-pw').value = '';
-    closeWishModal();
-    showToast('메시지가 등록되었습니다.');
+    if (wishSubmitting) return;
+    wishSubmitting = true;
+    api({ action: 'add', text: text, name: name, password: pw }).then(function (r) {
+      wishSubmitting = false;
+      if (r && r.ok) {
+        prependWishCard({ id: r.id, text: text, name: name });
+        document.getElementById('wish-text').value = '';
+        document.getElementById('wish-name').value = '';
+        document.getElementById('wish-pw').value = '';
+        closeWishModal();
+        showToast('메시지가 등록되었습니다.');
+      } else {
+        showToast('등록에 실패했어요. 다시 시도해 주세요.');
+      }
+    }).catch(function () {
+      wishSubmitting = false;
+      showToast('네트워크 오류가 발생했어요.');
+    });
   }
 
   function removeWish(btn) {
     var card = btn.closest('.wish-card');
-    var savedPw = card.dataset.pw;
-    if (!savedPw) { card.remove(); return; }
+    var id = card.dataset.id;
+    // 서버에 없는 정적 샘플 카드는 그냥 제거
+    if (!id) { card.remove(); return; }
     var entered = prompt('비밀번호를 입력해주세요.');
     if (entered === null) return;
-    if (entered === savedPw) {
-      card.remove();
-    } else {
-      showToast('비밀번호가 일치하지 않습니다.');
-    }
+    api({ action: 'delete', id: id, password: entered }).then(function (r) {
+      if (r && r.ok) {
+        card.remove();
+      } else if (r && r.error === 'password') {
+        showToast('비밀번호가 일치하지 않습니다.');
+      } else {
+        showToast('삭제에 실패했어요. 다시 시도해 주세요.');
+      }
+    }).catch(function () {
+      showToast('네트워크 오류가 발생했어요.');
+    });
   }
 
   function escapeHtml(str) {
