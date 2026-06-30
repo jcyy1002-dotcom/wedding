@@ -222,6 +222,14 @@
     white-space: pre-line;
     word-break: break-word;
   }
+  .bubble-name {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    opacity: .85;
+  }
+  .msg.out .bubble-name { color: rgba(255,255,255,.9); }
   /* 말풍선 꼬리 (마지막 연속 버블에만) */
   .msg.tail .bubble::before {
     content: "";
@@ -571,6 +579,7 @@
       <div class="modal-head">
         <div class="modal-title" id="modalTitle">비밀번호</div>
         <div class="modal-desc" id="modalDesc"></div>
+        <input class="modal-input" id="modalName" type="text" maxlength="12" placeholder="이름" autocomplete="off" style="display:none; margin-bottom:8px;">
         <input class="modal-input" id="modalInput" type="password" inputmode="numeric" autocomplete="off">
         <div class="modal-err" id="modalErr"></div>
       </div>
@@ -590,7 +599,8 @@
   var SHEET_API = 'https://script.google.com/macros/s/AKfycbxzobOEev_gW3UGqXZcFuaWJAwwRZSZ3hI6TBE_Epq8W9DVI3Lip_ieZ-8PE1M5SC37AA/exec';
 
   function api(params){
-    var url = SHEET_API + '?' + new URLSearchParams(params).toString();
+    // &_=타임스탬프 : 브라우저가 옛 응답을 캐시해 빈 목록을 보여주는 문제 방지
+    var url = SHEET_API + '?' + new URLSearchParams(params).toString() + '&_=' + Date.now();
     return fetch(url, { method: 'GET' }).then(function(r){ return r.json(); });
   }
 
@@ -854,29 +864,36 @@
   var mTitle = document.getElementById('modalTitle');
   var mDesc = document.getElementById('modalDesc');
   var mInput = document.getElementById('modalInput');
+  var mName = document.getElementById('modalName');
   var mErr = document.getElementById('modalErr');
   var mOk = document.getElementById('modalOk');
   var mCancel = document.getElementById('modalCancel');
   var onOkCb = null;
+  var withName = false;
 
   function showPrompt(o){
     mTitle.textContent = o.title;
     mDesc.textContent = o.desc || '';
     mDesc.style.display = o.desc ? 'block' : 'none';
     mInput.value = '';
+    withName = !!o.withName;
+    mName.value = '';
+    mName.style.display = withName ? 'block' : 'none';
     mErr.textContent = '';
     mOk.textContent = o.okText || '확인';
     onOkCb = o.onOk;
     overlay.classList.add('show');
-    setTimeout(function(){ mInput.focus(); }, 150);
+    setTimeout(function(){ (withName ? mName : mInput).focus(); }, 150);
   }
   function closeModal(){ overlay.classList.remove('show'); onOkCb = null; }
 
   function submitModal(){
     var v = mInput.value.trim();
+    var nm = mName.value.trim();
+    if(withName && !nm){ mErr.textContent = '이름을 입력해 주세요'; return; }
     if(!v){ mErr.textContent = '비밀번호를 입력해 주세요'; return; }
     mOk.disabled = true;
-    Promise.resolve(onOkCb ? onOkCb(v) : true).then(function(res){
+    Promise.resolve(onOkCb ? onOkCb(v, nm) : true).then(function(res){
       mOk.disabled = false;
       if(res === true || res === undefined){ closeModal(); return; }
       mErr.textContent = (typeof res === 'string') ? res : '비밀번호가 일치하지 않습니다';
@@ -889,15 +906,17 @@
   mOk.addEventListener('click', submitModal);
   mCancel.addEventListener('click', closeModal);
   mInput.addEventListener('keydown', function(e){ if(e.key === 'Enter') submitModal(); });
+  mName.addEventListener('keydown', function(e){ if(e.key === 'Enter') mInput.focus(); });
 
   // ===== 발신 말풍선 + 삭제 =====
   var msgSeq = 0;
   var msgPw = {};
 
-  function addOutBubble(text, id, localPw){
+  function addOutBubble(text, id, localPw, name){
     var msg = document.createElement('div');
     msg.className = 'msg out tail tail-gap';
-    msg.innerHTML = '<button class="del" aria-label="삭제">&times;</button><div class="bubble">' + escapeHtml(text) + '</div>';
+    var nameHtml = name ? '<span class="bubble-name">' + escapeHtml(name) + '</span>' : '';
+    msg.innerHTML = '<button class="del" aria-label="삭제">&times;</button><div class="bubble">' + nameHtml + escapeHtml(text) + '</div>';
     roomBody.appendChild(msg);
     void msg.offsetWidth;
     requestAnimationFrame(function(){ msg.classList.add('show'); });
@@ -928,14 +947,16 @@
     var text = msgInput.value.trim();
     if(!text) return;
     showPrompt({
-      title: '비밀번호 설정',
-      desc: '메시지 삭제 시 사용할 비밀번호를 설정하세요',
+      title: '이름 · 비밀번호',
+      desc: '이름과, 삭제 시 사용할 비밀번호를 입력하세요',
       okText: '보내기',
-      onOk: function(pw){
+      withName: true,
+      onOk: function(pw, nm){
+        var who = nm || '하객';
         if(SHEET_API){
-          return api({ action: 'add', text: text, password: pw }).then(function(r){
+          return api({ action: 'add', text: text, password: pw, name: who }).then(function(r){
             if(r && r.ok){
-              addOutBubble(text, r.id);
+              addOutBubble(text, r.id, null, who);
               msgInput.value = '';
               updateCounter();
               return true;
@@ -944,7 +965,7 @@
           });
         } else {
           var id = ++msgSeq;
-          addOutBubble(text, id, pw);
+          addOutBubble(text, id, pw, who);
           msgInput.value = '';
           updateCounter();
           return true;
@@ -961,7 +982,7 @@
     api({ action: 'list' }).then(function(r){
       if(currentRoom !== 'congrats') return;
       if(r && r.ok && r.messages){
-        r.messages.forEach(function(m){ addOutBubble(m.text, m.id); });
+        r.messages.forEach(function(m){ addOutBubble(m.text, m.id, null, m.name || '하객'); });
       }
     }).catch(function(){});
   }
