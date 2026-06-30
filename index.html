@@ -1491,7 +1491,7 @@
     api({ action: 'list' }).then(function (r) {
       if (r && r.ok && r.messages) {
         // 서버는 오래된→최신 순. 순서대로 prepend하면 최신이 맨 위에 옴
-        r.messages.forEach(function (m) { prependWishCard(m); });
+        r.messages.forEach(function (m) { try { prependWishCard(m); } catch (e) {} });
       }
     }).catch(function () {});
   }
@@ -1561,7 +1561,7 @@
   }
 
   function escapeHtml(str) {
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
   }
 
   // 계좌 아코디언
