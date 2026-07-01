@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
 <title>모바일 청첩장</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -235,6 +236,12 @@
     max-width: 78%;
     white-space: pre-line;
     word-break: break-word;
+  }
+  /* 전화번호/계좌 자동 링크(파란 글씨·밑줄) 방지 */
+  .bubble a {
+    color: inherit !important;
+    text-decoration: none !important;
+    pointer-events: none;
   }
   .bubble-name {
     display: block;
@@ -672,8 +679,8 @@
       name: '마음 보내는 곳', ava: '💌', time: '오후 1:20',
       messages: [
         '먼 길 오시기 어려운 분들을 위해\n마음 전하실 곳을 안내드립니다 💌',
-        '🤵 신랑 측\n○○은행 123-456-7890 조찬영',
-        '👰 신부 측\n○○은행 098-765-4321 황예경',
+        { text: '🤵 신랑 측\n하나은행 155-910334-24507 조찬영', copy: '15591033424507' },
+        { text: '👰 신부 측\n국민은행 501602-01-276833 황예경', copy: '50160201276833' },
         '전해주시는 따뜻한 마음\n감사히 간직하겠습니다 🙏'
       ]
     },
@@ -722,7 +729,7 @@
     msg.className = 'msg' + (isLast ? ' tail tail-gap' : '');
     var inner = escapeHtml(text);
     if(copy){
-      inner += '<button class="copybtn" type="button" aria-label="주소 복사" data-copy="' + escapeHtml(copy) + '">'
+      inner += '<button class="copybtn" type="button" aria-label="복사" data-copy="' + escapeHtml(copy) + '">'
         + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button>';
     }
     msg.innerHTML = '<div class="bubble">' + inner + '</div>';
@@ -734,7 +741,7 @@
       var btn = msg.querySelector('.copybtn');
       btn.addEventListener('click', function(){
         copyText(btn.getAttribute('data-copy'));
-        showToast('주소가 복사되었습니다');
+        showToast('복사되었습니다');
       });
     }
   }
