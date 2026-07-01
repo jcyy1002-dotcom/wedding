@@ -1026,9 +1026,20 @@
       z-index: 999;
       box-shadow: 0 2px 10px rgba(52,199,89,0.35);
       transition: opacity 0.2s;
+      animation: chatGlow 2.6s ease-in-out infinite;
     }
     .chat-btn:hover { opacity: 0.8; }
     .chat-btn svg { display: block; }
+
+    /* 은은하게 빛나는 효과 */
+    @keyframes chatGlow {
+      0%, 100% {
+        box-shadow: 0 2px 10px rgba(52,199,89,0.35), 0 0 0 0 rgba(52,199,89,0.0);
+      }
+      50% {
+        box-shadow: 0 2px 14px rgba(52,199,89,0.55), 0 0 22px 6px rgba(52,199,89,0.45);
+      }
+    }
 
     /* 메시지 도착 빨간 N 뱃지 */
     .chat-badge {
