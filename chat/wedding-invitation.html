@@ -16,7 +16,7 @@
   html, body { height: 100%; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'Apple SD Gothic Neo', sans-serif;
-    background: #c8c8cc;
+    background: #ffffff;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -994,13 +994,9 @@
 
   // 저장된 축하 메시지 불러오기
   function loadGuestMessages(){
-    if(!SHEET_API) return;
-    api({ action: 'list' }).then(function(r){
-      if(currentRoom !== 'congrats') return;
-      if(r && r.ok && r.messages){
-        r.messages.forEach(function(m){ try { addOutBubble(m.text, m.id, null, m.name || '하객'); } catch(e){} });
-      }
-    }).catch(function(){});
+    // 저장된 축하 메시지는 chat에서 표시하지 않음 (index에만 노출)
+    // 작성은 그대로 구글 시트에 저장되므로 index에서는 계속 보임
+    return;
   }
 
   // 대화 클릭
