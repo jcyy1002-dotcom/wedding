@@ -579,10 +579,10 @@
       line-height: 40px;
     }
 
-    /* 교통 주의사항 — transport-desc(26px)보다 2px 작게 */
+    /* 교통 주의사항 */
     .transport-note {
       font-family: 'Pretendard', sans-serif;
-      font-size: 24px;
+      font-size: 21px;
       font-weight: 400;
       color: #777;
       line-height: 34px;
@@ -684,18 +684,23 @@
     .account-btn.open .chevron { transform: rotate(180deg); }
 
     .account-panel {
-      display: none;
+      overflow: hidden;
+      max-height: 0;
       background: #ffffff;
-      border: 1px solid #e8e8e8;
-      border-top: none;
+      border: 0 solid #e8e8e8;
       border-radius: 0 0 5px 5px;
-      padding: 10px 40px 20px;
+      padding: 0 40px;
       text-align: left;
       margin-top: -30px;
       margin-bottom: 30px;
+      transition: max-height 0.35s ease, padding 0.35s ease, border-width 0.35s ease;
     }
 
-    .account-panel.open { display: block; }
+    .account-panel.open {
+      max-height: 200px;
+      border-width: 0 1px 1px;
+      padding: 10px 40px 20px;
+    }
 
     .account-row {
       display: flex;
@@ -808,7 +813,7 @@
 
     .wish-modal-title {
       font-family: 'Pretendard', sans-serif;
-      font-size: 22px;
+      font-size: 32px;
       font-weight: 600;
       color: var(--text);
       margin-bottom: 28px;
@@ -887,7 +892,7 @@
       border-radius: 8px;
       background: var(--text);
       font-family: 'Pretendard', sans-serif;
-      font-size: 18px;
+      font-size: 28px;
       font-weight: 500;
       color: var(--white);
       cursor: pointer;
@@ -1019,67 +1024,6 @@
     .chat-btn:hover { opacity: 0.8; }
     .chat-btn svg { display: block; }
 
-    /* ── 채팅 모달 (iframe) ── */
-    .chat-modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.55);
-      backdrop-filter: blur(3px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 2000;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
-    }
-    .chat-modal.open { opacity: 1; visibility: visible; }
-
-    .chat-modal-inner {
-      position: relative;
-      width: 100%;
-      max-width: 800px;
-      height: 100%;
-      max-height: 900px;
-      transform: scale(0.96);
-      transition: transform 0.3s ease;
-    }
-    .chat-modal.open .chat-modal-inner { transform: scale(1); }
-
-    .chat-modal iframe {
-      width: 100%;
-      height: 100%;
-      border: 0;
-      border-radius: 18px;
-      background: #fff;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.35);
-    }
-
-    .chat-modal-close {
-      position: absolute;
-      top: -14px;
-      right: -14px;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.95);
-      border: 1px solid var(--border);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.2);
-      z-index: 1;
-      transition: opacity 0.2s;
-    }
-    .chat-modal-close:hover { opacity: 0.8; }
-
-    @media (max-width: 440px) {
-      .chat-modal-inner { max-width: 100%; max-height: 100%; }
-      .chat-modal iframe { border-radius: 0; }
-      .chat-modal-close { top: 14px; right: 14px; }
-    }
-
     @keyframes spin {
       from { transform: rotate(0deg); }
       to   { transform: rotate(360deg); }
@@ -1114,7 +1058,7 @@
     <div class="intro-border-outer"></div>
     <div class="intro-border-inner"></div>
     <!-- 채팅(말풍선) 버튼 -->
-    <button class="chat-btn" id="chat-btn" onclick="openChat()" title="채팅 청첩장">
+    <button class="chat-btn" id="chat-btn" onclick="location.href='chat/wedding-invitation.html'" title="채팅 청첩장">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
       </svg>
@@ -1152,19 +1096,6 @@
       ALL THIS TIME, YOU WERE MY FAMILIAR, MY COMFORT, MY FAVORITE PLACE.<br>
       AND NOW, MY FOREVER.
     </p>
-  </div>
-
-  <!-- ── 채팅 청첩장 모달 ── -->
-  <div class="chat-modal" id="chat-modal" onclick="if(event.target===this)closeChat()">
-    <div class="chat-modal-inner">
-      <button class="chat-modal-close" onclick="closeChat()" title="닫기" aria-label="닫기">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round">
-          <line x1="6" y1="6" x2="18" y2="18"/>
-          <line x1="18" y1="6" x2="6" y2="18"/>
-        </svg>
-      </button>
-      <iframe id="chat-frame" title="채팅 청첩장" loading="lazy"></iframe>
-    </div>
   </div>
 
   <!-- ── 02 INVITATION TEXT ── -->
@@ -1619,28 +1550,6 @@
       btn.classList.remove('playing');
     }
   }
-
-  // 채팅 청첩장 모달
-  function openChat() {
-    var modal = document.getElementById('chat-modal');
-    var frame = document.getElementById('chat-frame');
-    // 처음 열 때만 로드(성능)
-    if (!frame.getAttribute('src')) {
-      frame.setAttribute('src', 'chat/wedding-invitation.html');
-    }
-    modal.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeChat() {
-    document.getElementById('chat-modal').classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  // ESC 키로 닫기
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') closeChat();
-  });
 
   // 사진 화살표 스크롤
   var currentMomentIndex = 0;
