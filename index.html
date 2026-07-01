@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=800" />
+  <meta name="format-detection" content="telephone=no" />
   <title>청첩장 - 찬영 &amp; 예경</title>
   <style>
     /* ── Pretendard (오픈소스 CDN) ── */
@@ -728,6 +729,12 @@
       font-weight: 400;
       color: var(--text);
     }
+    /* 전화번호 자동 링크(파란 글씨·밑줄) 방지 */
+    .account-num a {
+      color: inherit !important;
+      text-decoration: none !important;
+      pointer-events: none;
+    }
 
     .copy-btn {
       background: none;
@@ -1338,7 +1345,7 @@
           <div class="account-who">신랑</div>
           <div class="account-num">조찬영 &nbsp;·&nbsp; 155-910334-24507 하나</div>
         </div>
-        <button class="copy-btn" onclick="copyText('155-910334-24507')">
+        <button class="copy-btn" onclick="copyText('15591033424507')">
           <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <rect x="9" y="9" width="13" height="13" rx="2"/>
             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
@@ -1360,7 +1367,7 @@
           <div class="account-who">신부</div>
           <div class="account-num">황예경 &nbsp;·&nbsp; 501602-01-276833 국민</div>
         </div>
-        <button class="copy-btn" onclick="copyText('501602-01-276833')">
+        <button class="copy-btn" onclick="copyText('50160201276833')">
           <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <rect x="9" y="9" width="13" height="13" rx="2"/>
             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
