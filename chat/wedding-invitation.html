@@ -28,10 +28,9 @@
     width: 100%;
     max-width: 800px;
     height: 100vh;
-    max-height: 900px;
+    height: 100dvh;
     background: var(--bg);
     overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0,0,0,.25);
     display: flex;
     flex-direction: column;
   }
@@ -84,6 +83,21 @@
     font-size: 16px;
   }
   .nav-top .compose svg { width: 22px; height: 22px; }
+  .nav-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 1px;
+    background: none;
+    border: 0;
+    padding: 4px 6px 4px 0;
+    color: var(--blue);
+    font-size: 16px;
+    font-family: inherit;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nav-back svg { width: 22px; height: 22px; margin-left: -4px; }
+  .nav-back:active { opacity: .5; }
   .large-title {
     flex: 0 0 auto;
     padding: 22px 16px 20px;
@@ -457,7 +471,9 @@
   <!-- 메시지 목록 화면 -->
   <div class="list-screen">
     <div class="nav-top">
-      <span>편집</span>
+      <button class="nav-back" onclick="if(history.length>1){history.back()}else{location.href='../index.html'}" aria-label="뒤로">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
       <span class="compose">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       </span>
