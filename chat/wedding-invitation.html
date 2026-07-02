@@ -362,6 +362,13 @@
     display: flex; align-items: center; justify-content: space-between;
   }
   .room-input .field svg { width: 22px; height: 22px; color: var(--gray-text); }
+  /* 축하 입력칸 은은한 파란 glow (1회) */
+  @keyframes fieldGlow {
+    0%   { box-shadow: 0 0 0 0 rgba(0,122,255,0);   border-color: var(--sep); }
+    50%  { box-shadow: 0 0 16px 3px rgba(0,122,255,.5); border-color: var(--blue); }
+    100% { box-shadow: 0 0 0 0 rgba(0,122,255,0);   border-color: var(--sep); }
+  }
+  .room-input .field.glow { animation: fieldGlow 1.3s ease; }
   .room-input .send {
     width: 32px; height: 32px; flex: 0 0 auto;
     background: var(--blue);
@@ -617,7 +624,7 @@
         <div class="avatar">⚽</div>
         <div class="row-body">
           <div class="row-top">
-            <span class="row-name">손훙민</span>
+            <span class="row-name">손흥민</span>
             <span class="row-time">오후 1:20 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
           </div>
           <div class="row-msg">LA에 있어서 못 가지만, 마음만 보낼게!</div>
@@ -765,7 +772,7 @@
       }
     },
     gift: {
-      name: '손훙민', ava: '⚽', time: '오후 1:20',
+      name: '손흥민', ava: '⚽', time: '오후 1:20',
       messages: [
         '어디로 보내면 될까?',
         { text: '먼 길 오시기 어려운 분들을 위해\n마음 전하실 곳을 안내드립니다 💌', out: true },
@@ -777,7 +784,6 @@
     congrats: {
       name: '새로운 메시지', ava: '✏️', time: '오후 1:10',
       messages: [
-        { text: '예경, 찬영아! 결혼 축하해!', out: true },
         '저희에게 축하 한마디 남겨주세요 ✍️',
         '아래 입력창에 메시지를 적어\n마음을 전해주세요 🎉'
       ]
@@ -1028,6 +1034,15 @@
     // 축하 메시지 방: 인사말 이후 저장된 메시지 불러오기
     if(key === 'congrats'){
       roomTimers.push(setTimeout(loadGuestMessages, 500 + data.messages.length * 950 + 300));
+      // 말풍선 등장 후 입력칸이 파랗게 한 번 은은하게 빛남
+      var fieldEl = document.querySelector('.room-input .field');
+      roomTimers.push(setTimeout(function(){
+        if(!fieldEl) return;
+        fieldEl.classList.remove('glow');
+        void fieldEl.offsetWidth; // 리플로우로 애니메이션 재시작 보장
+        fieldEl.classList.add('glow');
+        setTimeout(function(){ fieldEl.classList.remove('glow'); }, 1400);
+      }, 500 + (data.messages.length - 1) * 950 + 650));
     }
 
     // 주차 방: 인사말 이후 교통수단 선택 버튼 표시
