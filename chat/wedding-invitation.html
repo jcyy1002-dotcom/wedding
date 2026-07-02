@@ -273,7 +273,44 @@
   .bubble.grid3 .gcell img {
     width: 100%; height: 100%;
     object-fit: cover; display: block;
+    cursor: pointer;
   }
+
+  /* 사진 라이트박스 */
+  .lightbox {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,.92);
+    display: none;
+    z-index: 3000;
+  }
+  .lightbox.show { display: block; }
+  .lb-track {
+    width: 100%; height: 100%;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .lb-slide {
+    flex: 0 0 100%;
+    width: 100%; height: 100%;
+    scroll-snap-align: center;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .lb-slide img {
+    max-width: 100%; max-height: 100%;
+    object-fit: contain; border-radius: 6px;
+  }
+  .lb-close {
+    position: absolute; top: 14px; right: 16px; z-index: 2;
+    width: 42px; height: 42px;
+    border: none; border-radius: 50%;
+    background: rgba(255,255,255,.16); color: #fff;
+    font-size: 26px; line-height: 1; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .lb-close:active { background: rgba(255,255,255,.3); }
   .bubble-name {
     display: block;
     font-size: 12px;
@@ -659,6 +696,12 @@
     </div>
   </div>
 
+  <!-- 사진 라이트박스 (가로 스크롤) -->
+  <div class="lightbox" id="lightbox">
+    <button class="lb-close" id="lbClose" aria-label="닫기">&times;</button>
+    <div class="lb-track" id="lbTrack"></div>
+  </div>
+
 </div>
 
 <script>
@@ -694,8 +737,7 @@
       messages: [
         '2026년 9월 20일 행복지수가 매우 높을 것으로 예보됩니다.',
         '소중한 분들의 많은 축하와 함께해 주시기 바랍니다.',
-        '본 안내는 행복 확산을 위한 알림입니다. 😊',
-        { img: 'photo04.jpeg' }
+        '본 안내는 행복 확산을 위한 알림입니다. 😊'
       ]
     },
     schedule: {
@@ -744,8 +786,8 @@
       name: '국립현대사진관', ava: '🖼️', time: '오후 1:00',
       messages: [
         '해당 사진의 전시를 제안드립니다.',
-        { grid: ['', '', '', '', '', '', '', '', ''] },
-        { grid: ['', '', '', '', '', '', '', '', ''] }
+        { grid: ['photo01.jpg','photo02.jpg','photo03.jpg','photo04.jpg','photo05.jpg','photo06.jpg','photo07.jpg','photo08.jpg','photo09.jpg'] },
+        { grid: ['photo10.jpg','photo11.jpg','photo12.jpg','photo13.jpg','photo14.jpg','photo15.jpg','photo16.jpg','photo17.jpg','photo18.jpg'] }
       ]
     }
   };
@@ -857,6 +899,32 @@
       showToast('사랑합니다 ❤️');
     }
   }
+
+  // ===== 사진 라이트박스 (가로 스크롤) =====
+  var lightbox = document.getElementById('lightbox');
+  var lbTrack = document.getElementById('lbTrack');
+
+  function openGallery(srcList, index){
+    lbTrack.innerHTML = srcList.map(function(s){
+      return '<div class="lb-slide"><img src="' + s + '" alt="" loading="lazy"></div>';
+    }).join('');
+    lightbox.classList.add('show');
+    // 표시 후 클릭한 사진 위치로 이동
+    requestAnimationFrame(function(){
+      lbTrack.scrollLeft = index * lbTrack.clientWidth;
+    });
+  }
+  function closeLightbox(){ lightbox.classList.remove('show'); lbTrack.innerHTML = ''; }
+  document.getElementById('lbClose').addEventListener('click', closeLightbox);
+
+  // 그리드 사진 클릭 → 라이트박스 열기
+  roomBody.addEventListener('click', function(e){
+    if(e.target.tagName !== 'IMG') return;
+    if(!e.target.closest('.gcell')) return;
+    var imgs = Array.prototype.slice.call(roomBody.querySelectorAll('.gcell img'));
+    var srcs = imgs.map(function(i){ return i.getAttribute('src'); });
+    openGallery(srcs, imgs.indexOf(e.target));
+  });
 
   function updateCounter(){ counter.textContent = msgInput.value.length + '/30'; }
   msgInput.addEventListener('input', updateCounter);
