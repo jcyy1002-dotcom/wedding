@@ -243,6 +243,26 @@
     text-decoration: none !important;
     pointer-events: none;
   }
+  .bubble.oneline { max-width: 100%; white-space: nowrap; }
+  /* 3x3 사진 그리드 말풍선 */
+  .bubble.grid3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+    padding: 4px;
+    width: 70%;
+    max-width: 70%;
+  }
+  .bubble.grid3 .gcell {
+    aspect-ratio: 1 / 1;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #d0d0d5;
+  }
+  .bubble.grid3 .gcell img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+  }
   .bubble-name {
     display: block;
     font-size: 12px;
@@ -516,7 +536,7 @@
             <span class="row-name">긴급 안내 문자</span>
             <span class="row-time">오후 1:58 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
           </div>
-          <div class="row-msg">[서울특별시] 2026.09.20 11:00 행복지수 높음 안내 ❤️</div>
+          <div class="row-msg">[서울시] 2026.09.20 11:00 행복지수 높음 안내 ❤️</div>
         </div>
       </div>
 
@@ -540,7 +560,7 @@
             <span class="row-name">한국도로공사</span>
             <span class="row-time">오후 1:30 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
           </div>
-          <div class="row-msg">[교통안내] 더 베일리하우스 방면으로 이동 방법 알려드립니다. 🚙</div>
+          <div class="row-msg">더 베일리하우스 방면으로 이동 방법 알려드립니다. 🚙</div>
         </div>
       </div>
 
@@ -565,6 +585,18 @@
             <span class="row-time">오후 1:10 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
           </div>
           <div class="row-msg">예경, 찬영아! 결혼 축하해!</div>
+        </div>
+      </div>
+
+      <div class="row" data-room="gallery">
+        <div class="unread-dot"></div>
+        <div class="avatar">🖼️</div>
+        <div class="row-body">
+          <div class="row-top">
+            <span class="row-name">국립현대사진관</span>
+            <span class="row-time">오후 1:00 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
+          </div>
+          <div class="row-msg">해당 사진의 전시를 제안드립니다.</div>
         </div>
       </div>
 
@@ -658,9 +690,9 @@
     schedule: {
       name: '로켓배송', ava: '📦', time: '오후 1:45',
       messages: [
-        "주문하신 '축하'가 배송 준비를 마쳤습니다.",
-        '받는 곳 : 더 베일리하우스, 서울 강남구 영동대로 506',
-        '배송 날짜 : 2026년 9월 20일 일요일 11시',
+        { text: "주문하신 '축하'가 배송 준비를 마쳤습니다.", nowrap: true },
+        '받는 곳 : 더 베일리하우스,\n서울 강남구 영동대로 506',
+        '배송날짜 : 2026.09.20 일요일\n오전 11시',
         '받는 사람 : 신랑 조찬영 / 신부 황예경',
         '정해진 시간에 직접 배달(참석) 부탁드립니다. 🎉'
       ]
@@ -696,6 +728,15 @@
         '저희에게 축하 한마디 남겨주세요 ✍️',
         '아래 입력창에 메시지를 적어\n마음을 전해주세요 🎉'
       ]
+    },
+    gallery: {
+      name: '국립현대사진관', ava: '🖼️', time: '오후 1:00',
+      messages: [
+        '해당 사진의 전시를 제안드립니다.',
+        { grid: ['', '', '', '', '', '', '', '', ''] },
+        { grid: ['', '', '', '', '', '', '', '', ''] },
+        { grid: ['', '', '', '', '', '', '', '', ''] }
+      ]
     }
   };
 
@@ -715,6 +756,25 @@
   function addBubble(item, isLast){
     var isObj = (typeof item === 'object' && item);
     var img = isObj ? item.img : null;
+    var grid = isObj ? item.grid : null;
+
+    // 3x3 사진 그리드 말풍선
+    if(grid){
+      var cells = '';
+      for(var gi = 0; gi < grid.length; gi++){
+        cells += grid[gi]
+          ? '<div class="gcell"><img src="' + grid[gi] + '" alt="" loading="lazy"></div>'
+          : '<div class="gcell empty"></div>';
+      }
+      var gmsg = document.createElement('div');
+      gmsg.className = 'msg';
+      gmsg.innerHTML = '<div class="bubble grid3">' + cells + '</div>';
+      roomBody.appendChild(gmsg);
+      void gmsg.offsetWidth;
+      requestAnimationFrame(function(){ gmsg.classList.add('show'); });
+      roomBody.scrollTop = roomBody.scrollHeight;
+      return;
+    }
 
     // 사진 말풍선
     if(img){
@@ -738,7 +798,8 @@
       inner += '<button class="copybtn" type="button" aria-label="복사" data-copy="' + escapeHtml(copy) + '">'
         + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button>';
     }
-    msg.innerHTML = '<div class="bubble">' + inner + '</div>';
+    var bubbleCls = 'bubble' + (isObj && item.nowrap ? ' oneline' : '');
+    msg.innerHTML = '<div class="' + bubbleCls + '">' + inner + '</div>';
     roomBody.appendChild(msg);
     void msg.offsetWidth;
     requestAnimationFrame(function(){ msg.classList.add('show'); });
