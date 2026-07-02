@@ -1689,22 +1689,31 @@
 
     function initNaverMap() {
       if (!(window.naver && naver.maps)) return; // 스크립트/키 미설정 시 무시
-      var center = new naver.maps.LatLng(VENUE.lat, VENUE.lng);
+      var venue = new naver.maps.LatLng(VENUE.lat, VENUE.lng);
+      // 핀이 화면 살짝 위쪽 → 삼성역이 아래로 보이도록 중심을 조금 남쪽으로
+      var center = new naver.maps.LatLng(VENUE.lat - 0.00075, VENUE.lng);
       var map = new naver.maps.Map('naver-map', {
         center: center,
         zoom: 16,
         scaleControl: false,
-        mapDataControl: false
+        mapDataControl: false,
+        mapTypeControl: false
       });
-      var marker = new naver.maps.Marker({ position: center, map: map, title: VENUE.title });
+      var marker = new naver.maps.Marker({ position: venue, map: map, title: VENUE.title });
       var info = new naver.maps.InfoWindow({
-        content: '<div style="padding:8px 12px;font-size:14px;font-family:Pretendard,sans-serif;">'
-               + VENUE.title + '</div>'
+        content: '<div style="padding:7px 14px;background:#fff;border-radius:9px;'
+               + 'box-shadow:0 2px 8px rgba(0,0,0,.22);font-size:16px;font-weight:600;'
+               + 'font-family:Pretendard,sans-serif;white-space:nowrap;color:#222;">'
+               + VENUE.title + '</div>',
+        borderWidth: 0,
+        disableAnchor: true,
+        backgroundColor: 'transparent',
+        pixelOffset: new naver.maps.Point(0, -6)
       });
+      info.open(map, marker);
       naver.maps.Event.addListener(marker, 'click', function () {
         info.getMap() ? info.close() : info.open(map, marker);
       });
-      info.open(map, marker);
     }
 
     if (document.readyState === 'loading') {
