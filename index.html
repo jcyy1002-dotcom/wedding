@@ -538,6 +538,16 @@
       object-fit: cover;
       display: block;
       margin: 36px 0 0;
+      background: #e9e9e9;
+    }
+    .map-open-link {
+      display: block;
+      text-align: center;
+      margin: 18px 0 0;
+      font-family: 'Pretendard', sans-serif;
+      font-size: 22px;
+      color: #03C75A; /* 네이버 그린 */
+      text-decoration: none;
     }
 
     /* 교통 안내 (Figma 수평패딩 76px) */
@@ -1284,14 +1294,8 @@
       </div>
     </div>
 
-    <a href="https://naver.me/I55aZqB6" target="_blank">
-      <img
-        class="map-img"
-        src="map.png"
-        alt="지도"
-        style="cursor:pointer;"
-      />
-    </a>
+    <div id="naver-map" class="map-img"></div>
+    <a class="map-open-link" href="https://naver.me/I55aZqB6" target="_blank">네이버 지도에서 길찾기 ›</a>
 
     <div class="transport-wrap">
       <div class="transport-row">
@@ -1672,6 +1676,43 @@
       }, 1800);
     });
   }
+</script>
+
+<!-- ── 네이버 지도 API ── -->
+<!-- ⚠️ 아래 YOUR_NCP_CLIENT_ID 를 네이버 클라우드 플랫폼에서 발급받은 키로 교체하세요.
+     신규 발급이면 파라미터명이 ncpKeyId, 예전 발급이면 ncpClientId 일 수 있습니다. -->
+<script src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=1e8fz6ni3i"></script>
+<script>
+  (function () {
+    // ▼ 예식장 좌표 — 부정확하면 이 값만 조정하세요 (네이버 지도에서 우클릭 → 좌표 확인)
+    var VENUE = { lat: 37.509306, lng: 127.062583, title: '더 베일리하우스 삼성' };
+
+    function initNaverMap() {
+      if (!(window.naver && naver.maps)) return; // 스크립트/키 미설정 시 무시
+      var center = new naver.maps.LatLng(VENUE.lat, VENUE.lng);
+      var map = new naver.maps.Map('naver-map', {
+        center: center,
+        zoom: 16,
+        scaleControl: false,
+        mapDataControl: false
+      });
+      var marker = new naver.maps.Marker({ position: center, map: map, title: VENUE.title });
+      var info = new naver.maps.InfoWindow({
+        content: '<div style="padding:8px 12px;font-size:14px;font-family:Pretendard,sans-serif;">'
+               + VENUE.title + '</div>'
+      });
+      naver.maps.Event.addListener(marker, 'click', function () {
+        info.getMap() ? info.close() : info.open(map, marker);
+      });
+      info.open(map, marker);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initNaverMap);
+    } else {
+      initNaverMap();
+    }
+  })();
 </script>
 </body>
 </html>
