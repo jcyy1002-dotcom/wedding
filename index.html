@@ -1690,11 +1690,11 @@
     function initNaverMap() {
       if (!(window.naver && naver.maps)) return; // 스크립트/키 미설정 시 무시
       var venue = new naver.maps.LatLng(VENUE.lat, VENUE.lng);
-      // 핀이 화면 살짝 위쪽 → 삼성역이 아래로 보이도록 중심을 조금 남쪽으로
-      var center = new naver.maps.LatLng(VENUE.lat - 0.00075, VENUE.lng);
+      // 핀을 화면 정중앙에 배치
+      var center = venue;
       var map = new naver.maps.Map('naver-map', {
         center: center,
-        zoom: 16,
+        zoom: 18,
         scaleControl: false,
         mapDataControl: false,
         mapTypeControl: false
