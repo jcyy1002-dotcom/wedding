@@ -120,6 +120,10 @@
     }
 
     /* "the wedding of" — Sackers Medium 32px */
+    @keyframes subtitleRise {
+      from { opacity: 0; transform: translateY(34px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
     .intro-subtitle {
       font-family: 'Sackers Gothic Std', sans-serif;
       font-size: 32px;
@@ -127,6 +131,8 @@
       letter-spacing: 2px;
       color: var(--text);
       margin-bottom: 25px;
+      opacity: 0;
+      animation: subtitleRise 1.5s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
     }
 
     /* "chanyoung & yegyeong" — Sackers Heavy 43px */
@@ -170,10 +176,21 @@
       animation: slideDown 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
     }
 
-    /* 일러스트: Figma 331×350px */
+    /* 타이핑 효과: 한 글자씩 부드럽게 나타남 */
+    @keyframes typeReveal {
+      from { opacity: 0; transform: translateY(2px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .intro-names .letter {
+      display: inline-block;
+      opacity: 0;
+      animation: typeReveal 0.32s ease forwards;
+    }
+
+    /* 일러스트 */
     .intro-illustration {
-      width: 331px;
-      height: 350px;
+      width: 380px;
+      height: 402px;
       object-fit: contain;
       margin: 120px auto 0;
       display: block;
@@ -216,17 +233,17 @@
       font-weight: 400;
       color: var(--text);
       letter-spacing: -1.8px;
-      margin-bottom: 70px;
+      margin-bottom: 40px;
       line-height: normal;
     }
 
     /* 본문 — 87MM ILSANG 25px, line-height 50px */
     .invite-body {
       font-family: '87MM ILSANG', serif;
-      font-size: 25px;
+      font-size: 22px;
       font-weight: 400;
       color: var(--text);
-      line-height: 50px;
+      line-height: 44px;
       letter-spacing: -1.25px;
       margin-bottom: 130px;
     }
@@ -426,9 +443,21 @@
       display: flex;
       overflow-x: auto;
       gap: 30px;
-      padding: 0 75px 0;
+      padding: 0 75px;
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      scroll-padding-left: 75px;
+    }
+    /* 스크롤 영역 + 왼쪽 흰색 마스크 (지나간 사진 가림) */
+    .moments-viewport { position: relative; }
+    .moments-mask-left {
+      position: absolute;
+      top: 0; bottom: 0; left: 0;
+      width: 75px;
+      background: var(--white);
+      pointer-events: none;
+      z-index: 2;
     }
 
     .moments-scroll::-webkit-scrollbar { display: none; }
@@ -465,6 +494,8 @@
       filter: brightness(1);
       opacity: 1;
       transition: filter 0.5s ease, opacity 0.5s ease;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
     }
 
     .moment-photo.active {
@@ -596,7 +627,7 @@
       font-size: 18px;
       font-weight: 400;
       color: #777;
-      line-height: 34px;
+      line-height: 26px;
       text-align: center;
       margin-top: 30px;
       padding: 0 76px 60px;
@@ -786,6 +817,10 @@
     }
 
     /* 작성하기 버튼 */
+    @keyframes wishBtnBreathe {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(250, 236, 90, 0); }
+      50%      { box-shadow: 0 0 20px 3px rgba(250, 236, 90, 0.7); }
+    }
     .wish-open-btn {
       width: 100%;
       height: 110px;
@@ -799,6 +834,10 @@
       cursor: pointer;
       letter-spacing: -0.5px;
       transition: background 0.15s;
+    }
+    /* 섹션이 화면에 나타날 때 딱 한 번 숨쉬듯 빛남 */
+    .wishes-section.visible .wish-open-btn {
+      animation: wishBtnBreathe 2.6s ease-in-out 1 both;
     }
 
     .wish-open-btn:hover { background: #f5f5f5; }
@@ -843,7 +882,7 @@
       right: 24px;
       background: none;
       border: none;
-      font-size: 26px;
+      font-size: 44px;
       color: #aaa;
       cursor: pointer;
       line-height: 1;
@@ -870,7 +909,7 @@
 
     .wish-name-input {
       width: 100%;
-      height: 76px;
+      height: 96px;
       border: 1px solid var(--border);
       border-top: none;
       border-radius: 0;
@@ -886,7 +925,7 @@
 
     .wish-pw-input {
       width: 100%;
-      height: 76px;
+      height: 96px;
       border: 1px solid var(--border);
       border-top: none;
       border-radius: 0 0 8px 8px;
@@ -1154,10 +1193,8 @@
     />
     <p class="invite-title">예경과 찬영 결혼합니다.</p>
     <p class="invite-body">
-      오랜 시간 서로의 곁을 지키며<br>
-      가장 편안한 사람이 되었습니다.<br>
-      이제는 같은 곳을 바라보며<br>
-      한 걸음 더 나아가려 합니다.<br>
+      오랜 시간 서로의 곁을 지키며 가장 편안한 사람이 되었습니다.<br>
+      이제는 같은 곳을 바라보며 한 걸음 더 나아가려 합니다.<br>
       소중한 날, 함께해 주시면 감사하겠습니다.
     </p>
     <div class="parents-wrap">
@@ -1255,6 +1292,7 @@
       />
       <h2 class="section-heading section-heading-lg">moments</h2>
     </div>
+    <div class="moments-viewport">
     <div class="moments-scroll">
       <div class="moment-photo"><img src="photo01.jpeg" alt="사진01"></div>
       <div class="moment-photo"><img src="photo02.jpeg" alt="사진02"></div>
@@ -1266,6 +1304,8 @@
       <div class="moment-photo"><img src="photo08.jpeg" alt="사진08"></div>
       <div class="moment-photo"><img src="photo09.jpeg" alt="사진09"></div>
       <div class="moment-photo"><img src="photo10.jpeg" alt="사진10"></div>
+    </div>
+    <div class="moments-mask-left"></div>
     </div>
     <!-- 좌우 화살표 -->
     <div class="moments-arrows">
@@ -1398,13 +1438,7 @@
     <p class="wishes-desc">신랑·신부에게 축하의 한 마디를 남겨주세요!</p>
     <button class="wish-open-btn" onclick="openWishModal()">작성하기</button>
 
-    <div class="wish-cards-grid" id="wish-grid">
-      <div class="wish-card">
-        <button class="wish-card-close" onclick="removeWish(this)">×</button>
-        <p class="wish-card-text">예경아 행복하게 잘 살아 ❤️❤️</p>
-        <p class="wish-card-from">from. 희진</p>
-      </div>
-    </div>
+    <div class="wish-cards-grid" id="wish-grid"></div>
   </section>
 
   <!-- ── 모달 ── -->
@@ -1414,7 +1448,7 @@
       <p class="wish-modal-title">찬영&amp;예경에게 축하메시지 남기기</p>
       <textarea class="wish-input-area" id="wish-text" placeholder="축하메시지를 남겨주세요."></textarea>
       <input class="wish-name-input" id="wish-name" type="text" placeholder="이름을 입력해주세요." />
-      <input class="wish-pw-input" id="wish-pw" type="password" placeholder="비밀번호를 설정해주세요." />
+      <input class="wish-pw-input" id="wish-pw" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="숫자 4자리 비밀번호" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,4)" />
       <button class="wish-submit-btn" onclick="addWish()">작성하기</button>
     </div>
   </div>
@@ -1676,6 +1710,28 @@
       }, 1800);
     });
   }
+</script>
+
+<!-- ── 인트로 이름: 알파벳 하나씩 떠오르기 ── -->
+<script>
+  (function () {
+    var container = document.querySelector('.intro-names');
+    if (!container) return;
+    var START = 0.3, STEP = 0.1, idx = 0;
+    Array.prototype.forEach.call(container.children, function (el) {
+      var text = el.textContent;
+      el.textContent = '';
+      el.classList.remove('name-slide-up', 'name-slide-down');
+      for (var i = 0; i < text.length; i++) {
+        var s = document.createElement('span');
+        s.className = 'letter';
+        s.textContent = text[i];
+        s.style.animationDelay = (START + idx * STEP).toFixed(2) + 's';
+        el.appendChild(s);
+        idx++;
+      }
+    });
+  })();
 </script>
 
 <!-- ── 네이버 지도 API ── -->
