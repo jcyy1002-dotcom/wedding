@@ -123,10 +123,14 @@
   /* ===== 대화 목록 ===== */
   .list {
     flex: 1 1 auto;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
   .row {
+    flex: 1 1 0;
+    min-height: 0;
     display: flex;
     align-items: center;
     padding: 10px 12px 10px 12px;
