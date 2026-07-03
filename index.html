@@ -1398,9 +1398,9 @@
       <div class="account-row">
         <div>
           <div class="account-who">신랑</div>
-          <div class="account-num">조찬영 &nbsp;·&nbsp; 155-910334-24507 하나</div>
+          <div class="account-num">탭하여 계좌 보기</div>
         </div>
-        <button class="copy-btn" onclick="copyText('15591033424507')">
+        <button class="copy-btn">
           <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <rect x="9" y="9" width="13" height="13" rx="2"/>
             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
@@ -1420,9 +1420,9 @@
       <div class="account-row">
         <div>
           <div class="account-who">신부</div>
-          <div class="account-num">황예경 &nbsp;·&nbsp; 501602-01-276833 국민</div>
+          <div class="account-num">탭하여 계좌 보기</div>
         </div>
-        <button class="copy-btn" onclick="copyText('50160201276833')">
+        <button class="copy-btn">
           <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <rect x="9" y="9" width="13" height="13" rx="2"/>
             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
@@ -1571,11 +1571,25 @@
     return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
   }
 
-  // 계좌 아코디언
+  // 계좌 아코디언 (계좌번호는 인코딩 저장 → 펼칠 때만 복원)
+  var ACCTX = {
+    groom: { num: '7KGw7LCs7JiBIMK3IDE1NS05MTAzMzQtMjQ1MDcg7ZWY64KY', copy: 'MTU1OTEwMzM0MjQ1MDc=' },
+    bride: { num: '7Zmp7JiI6rK9IMK3IDUwMTYwMi0wMS0yNzY4MzMg6rWt66+8', copy: 'NTAxNjAyMDEyNzY4MzM=' }
+  };
+  function decB(b){ try { return decodeURIComponent(escape(atob(b))); } catch(e){ return ''; } }
   function toggleAccount(side, btn) {
     var panel = document.getElementById('panel-' + side);
     var isOpen = panel.classList.toggle('open');
     btn.classList.toggle('open', isOpen);
+    if(isOpen && !panel.dataset.revealed){
+      var info = ACCTX[side];
+      if(info){
+        panel.querySelector('.account-num').textContent = decB(info.num);
+        var copy = decB(info.copy);
+        panel.querySelector('.copy-btn').onclick = function(){ copyText(copy); };
+        panel.dataset.revealed = '1';
+      }
+    }
   }
 
   // 계좌번호 복사
