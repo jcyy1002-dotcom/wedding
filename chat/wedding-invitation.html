@@ -6,7 +6,19 @@
 <meta name="format-detection" content="telephone=no">
 <title>모바일 청첩장</title>
 <style>
+  /* 교보 손글씨 2025 (chat 폴더에 KyoboHandwriting2025.ttf 를 넣어주세요) */
+  @font-face {
+    font-family: 'KyoboHandwriting2025';
+    src: url('KyoboHandwriting2025.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  /* chat 안의 모든 폰트를 교보 손글씨로 통일 */
+  .phone, .phone * {
+    font-family: 'KyoboHandwriting2025', 'Apple SD Gothic Neo', -apple-system, sans-serif !important;
+  }
   :root {
     --blue: #007AFF;
     --in-bubble: #E9E9EB;
