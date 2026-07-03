@@ -467,27 +467,27 @@
     <div class="sheet-head"><div class="sheet-title">마음 전하는 곳</div><button class="sheet-close" onclick="closeSheet()">&times;</button></div>
     <div class="sheet-body">
       <div class="gift-desc">참석이 어려우신 분들을 위해 기재했습니다.<br>너그러운 마음으로 양해 부탁드립니다.</div>
-      <div class="acct">
+      <div class="acct" data-side="groom">
         <div class="acct-head" onclick="toggleAcct(this)">
           <span class="emo">🤵</span> 신랑 측 계좌
           <svg class="chev" width="14" height="8" viewBox="0 0 14 8" fill="none"><path d="M1 1l6 6 6-6" stroke="#888" stroke-width="1.6" stroke-linecap="round"/></svg>
         </div>
         <div class="acct-panel">
           <div class="acct-row">
-            <div><div class="acct-who">신랑 조찬영</div><div class="acct-num">하나은행 155-910334-24507</div></div>
-            <button class="acct-copy" onclick="copyText('15591033424507');showToast('복사되었습니다')">복사</button>
+            <div><div class="acct-who">신랑 조찬영</div><div class="acct-num">탭하여 계좌 보기</div></div>
+            <button class="acct-copy">복사</button>
           </div>
         </div>
       </div>
-      <div class="acct">
+      <div class="acct" data-side="bride">
         <div class="acct-head" onclick="toggleAcct(this)">
           <span class="emo">👰</span> 신부 측 계좌
           <svg class="chev" width="14" height="8" viewBox="0 0 14 8" fill="none"><path d="M1 1l6 6 6-6" stroke="#888" stroke-width="1.6" stroke-linecap="round"/></svg>
         </div>
         <div class="acct-panel">
           <div class="acct-row">
-            <div><div class="acct-who">신부 황예경</div><div class="acct-num">국민은행 501602-01-276833</div></div>
-            <button class="acct-copy" onclick="copyText('50160201276833');showToast('복사되었습니다')">복사</button>
+            <div><div class="acct-who">신부 황예경</div><div class="acct-num">탭하여 계좌 보기</div></div>
+            <button class="acct-copy">복사</button>
           </div>
         </div>
       </div>
@@ -680,10 +680,26 @@
     document.getElementById('appScroll').scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // 축의금 아코디언
+  // 축의금 아코디언 (계좌번호는 인코딩 저장 → 펼칠 때만 복원)
+  var ACCT = {
+    groom: { num: '7ZWY64KY7J2A7ZaJIDE1NS05MTAzMzQtMjQ1MDc=', copy: 'MTU1OTEwMzM0MjQ1MDc=' },
+    bride: { num: '6rWt66+87J2A7ZaJIDUwMTYwMi0wMS0yNzY4MzM=', copy: 'NTAxNjAyMDEyNzY4MzM=' }
+  };
+  function dec(b){ try { return decodeURIComponent(escape(atob(b))); } catch(e){ return ''; } }
   function toggleAcct(head){
+    var acct = head.closest('.acct');
+    var opening = !head.classList.contains('open');
     head.classList.toggle('open');
     head.nextElementSibling.classList.toggle('open');
+    if(opening && !acct.dataset.revealed){
+      var info = ACCT[acct.dataset.side];
+      if(info){
+        acct.querySelector('.acct-num').textContent = dec(info.num);
+        var copy = dec(info.copy);
+        acct.querySelector('.acct-copy').onclick = function(){ copyText(copy); showToast('복사되었습니다'); };
+        acct.dataset.revealed = '1';
+      }
+    }
   }
 
   // 복사 & 토스트
