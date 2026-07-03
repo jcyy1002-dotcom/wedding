@@ -6,551 +6,334 @@
 <meta name="format-detection" content="telephone=no">
 <title>모바일 청첩장</title>
 <style>
-  /* 교보 손글씨 2025 (chat 폴더에 KyoboHandwriting2025.ttf 를 넣어주세요) */
   @font-face {
     font-family: 'KyoboHandwriting2025';
     src: url('KyoboHandwriting2025.otf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
+    font-weight: normal; font-style: normal; font-display: swap;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  /* chat 안의 모든 폰트를 교보 손글씨로 통일 */
-  .phone, .phone * {
-    font-family: 'KyoboHandwriting2025', 'Apple SD Gothic Neo', -apple-system, sans-serif !important;
-  }
   :root {
-    --blue: #007AFF;
-    --in-bubble: #E9E9EB;
-    --gray-text: #8E8E93;
-    --sep: #D1D1D6;
-    --bg: #ffffff;
+    --line: #dbdbdb;
+    --line2: #efefef;
+    --gray: #8e8e8e;
+    --dark: #262626;
+    --blue: #0095f6;
+    --ig: linear-gradient(45deg,#f09433,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888);
   }
   html, body { height: 100%; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', 'Apple SD Gothic Neo', sans-serif;
-    background: #ffffff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    color: #000;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Apple SD Gothic Neo', sans-serif;
+    background: #fafafa;
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; color: var(--dark);
   }
+  .handwrite { font-family: 'KyoboHandwriting2025', inherit; }
   .phone {
     position: relative;
-    width: 100%;
-    max-width: 800px;
-    height: 100vh;
-    height: 100dvh;
-    background: var(--bg);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+    width: 100%; max-width: 800px;
+    height: 100vh; height: 100dvh;
+    background: #fff; overflow: hidden;
+    display: flex; flex-direction: column;
   }
 
   /* ===== 스플래시 ===== */
   .splash {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(160deg, #ffffff 0%, #f3f4f6 100%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    transition: opacity .6s ease, visibility .6s;
+    position: absolute; inset: 0;
+    background: #fff;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 500;
+    transition: opacity .5s ease, visibility .5s;
   }
   .splash.hide { opacity: 0; visibility: hidden; }
   .splash-logo {
-    width: 92px; height: 92px;
-    border-radius: 22px;
-    background: linear-gradient(160deg, #5BD15B 0%, #34C759 100%);
+    width: 96px; height: 96px; border-radius: 26px;
+    background: var(--ig);
     display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 8px 22px rgba(52,199,89,.4);
+    box-shadow: 0 10px 26px rgba(220,39,67,.32);
     animation: pop .6s ease;
   }
-  .splash-logo svg { width: 54px; height: 54px; }
-  .splash-title {
-    margin-top: 24px;
-    font-size: 19px;
-    font-weight: 600;
-    letter-spacing: .5px;
-    color: #1a1a1a;
-  }
-  .splash-sub { margin-top: 7px; font-size: 13px; color: var(--gray-text); }
-  @keyframes pop {
-    0% { transform: scale(.4); opacity: 0; }
-    60% { transform: scale(1.1); }
-    100% { transform: scale(1); opacity: 1; }
-  }
+  .splash-logo svg { width: 52px; height: 52px; }
+  .splash-title { margin-top: 22px; font-size: 30px; color: var(--dark); }
+  .splash-sub { margin-top: 6px; font-size: 14px; color: var(--gray); }
+  @keyframes pop { 0%{transform:scale(.4);opacity:0} 60%{transform:scale(1.1)} 100%{transform:scale(1);opacity:1} }
 
-  /* ===== 메시지 목록 헤더 ===== */
-  .list-screen { display: flex; flex-direction: column; height: 100%; }
-  .nav-top {
+  /* ===== 상단 바 ===== */
+  .topbar {
     flex: 0 0 auto;
-    padding: 10px 16px 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: var(--blue);
-    font-size: 16px;
-  }
-  .nav-top .compose { cursor: pointer; -webkit-tap-highlight-color: transparent; }
-  .nav-top .compose svg { width: 22px; height: 22px; transition: transform .2s ease; }
-  .nav-top .compose.liked svg { fill: #FF3B30; stroke: #FF3B30; animation: heartPop .4s ease; }
-  @keyframes heartPop {
-    0%   { transform: scale(1); }
-    40%  { transform: scale(1.4); }
-    100% { transform: scale(1); }
-  }
-  .nav-back {
-    display: inline-flex;
-    align-items: center;
-    gap: 1px;
-    background: none;
-    border: 0;
-    padding: 4px 6px 4px 0;
-    color: var(--blue);
-    font-size: 16px;
-    font-family: inherit;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .nav-back svg { width: 22px; height: 22px; margin-left: -4px; }
-  .nav-back:active { opacity: .5; }
-  .large-title {
-    flex: 0 0 auto;
-    padding: 22px 16px 20px;
-    font-size: 32px;
-    font-weight: 700;
-    letter-spacing: -.5px;
-  }
-  .search {
-    flex: 0 0 auto;
-    margin: 0 12px 8px;
-    background: #E4E4E6;
-    border-radius: 10px;
-    padding: 8px 10px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--gray-text);
-    font-size: 15px;
-  }
-  .search svg { width: 16px; height: 16px; }
-
-  /* ===== 대화 목록 ===== */
-  .list {
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-  .row {
-    flex: 1 1 0;
-    min-height: 0;
-    display: flex;
-    align-items: center;
-    padding: 10px 12px 10px 12px;
-    gap: 11px;
-    cursor: pointer;
-    position: relative;
-  }
-  .row:active { background: #f0f0f3; }
-  .unread-dot { display: none; }
-  .avatar {
-    flex: 0 0 auto;
-    width: 52px; height: 52px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 26px;
-    background: #f7f7f7;
-  }
-  .row-body {
-    flex: 1 1 auto; min-width: 0;
-    border-bottom: .5px solid var(--sep);
-    padding-bottom: 10px;
-    margin-bottom: -10px;
-  }
-  .row-top { display: flex; align-items: baseline; justify-content: space-between; }
-  .row-name { font-size: 16px; font-weight: 600; }
-  .row-time { font-size: 13px; color: var(--gray-text); flex: 0 0 auto; margin-left: 8px; display: flex; align-items: center; gap: 4px; }
-  .row-time svg { width: 13px; height: 13px; }
-  .row-msg {
-    font-size: 14px; color: var(--gray-text); margin-top: 3px;
-    line-height: 1.35; max-height: 2.7em; overflow: hidden;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-  }
-
-  /* ===== 채팅방 상세 ===== */
-  .room {
-    position: absolute;
-    inset: 0;
-    background: var(--bg);
-    display: flex;
-    flex-direction: column;
-    z-index: 50;
-    transform: translateX(100%);
-    transition: transform .3s ease;
-  }
-  .room.open { transform: translateX(0); }
-
-  .room-header {
-    flex: 0 0 auto;
-    padding: 8px 14px 10px;
-    border-bottom: .5px solid var(--sep);
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    background: rgba(255,255,255,.92);
-    backdrop-filter: saturate(180%) blur(10px);
-    position: relative; z-index: 10;
-  }
-  .room-header .back {
-    display: flex; align-items: center; gap: 1px;
-    color: var(--blue); cursor: pointer; font-size: 16px;
-    justify-self: start;
-  }
-  .room-header .back svg { width: 26px; height: 26px; }
-  .room-header .who { display: flex; flex-direction: column; align-items: center; }
-  .room-header .who .ava {
-    width: 40px; height: 40px; border-radius: 50%;
-    background: #f7f7f7;
-    display: flex; align-items: center; justify-content: center; font-size: 21px;
-  }
-  .room-header .who .nm { font-size: 12px; margin-top: 3px; display: flex; align-items: center; gap: 2px; }
-  .room-header .who .nm svg { width: 11px; height: 11px; color: var(--gray-text); }
-
-  .room-body {
-    flex: 1 1 auto;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 14px 14px 18px;
-  }
-  .ts {
-    text-align: center;
-    font-size: 11px;
-    color: var(--gray-text);
-    margin: 4px 0 16px;
-    font-weight: 500;
-  }
-  .ts b { font-weight: 700; color: #6b6b70; }
-
-  /* iMessage 수신 말풍선 */
-  .msg {
-    display: flex;
-    margin-bottom: 3px;
-    opacity: 0;
-    transform: translateY(8px) scale(.96);
-    transform-origin: left bottom;
-    transition: opacity .3s ease, transform .3s ease;
-  }
-  .msg.show { opacity: 1; transform: translateY(0) scale(1); }
-  .msg.tail-gap { margin-bottom: 10px; }
-  .bubble {
-    position: relative;
-    background: var(--in-bubble);
-    color: #000;
-    border-radius: 19px;
-    padding: 8px 14px;
-    font-size: 16px;
-    line-height: 1.35;
-    max-width: 78%;
-    white-space: pre-line;
-    word-break: break-word;
-  }
-  /* 전화번호/계좌 자동 링크(파란 글씨·밑줄) 방지 */
-  .bubble a {
-    color: inherit !important;
-    text-decoration: none !important;
-    pointer-events: none;
-  }
-  .bubble.oneline { max-width: 100%; white-space: nowrap; }
-  /* 3x3 사진 그리드 말풍선 */
-  .bubble.grid3 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 3px;
-    padding: 4px;
-    width: 70%;
-    max-width: 70%;
-  }
-  .bubble.grid3 .gcell {
-    aspect-ratio: 1 / 1;
-    border-radius: 6px;
-    overflow: hidden;
-    background: #d0d0d5;
-  }
-  .bubble.grid3 .gcell img {
-    width: 100%; height: 100%;
-    object-fit: cover; display: block;
-    cursor: pointer;
-  }
-
-  /* 사진 라이트박스 */
-  .lightbox {
-    position: absolute; inset: 0;
-    background: rgba(0,0,0,.92);
-    display: none;
-    z-index: 3000;
-  }
-  .lightbox.show { display: block; }
-  .lb-track {
-    width: 100%; height: 100%;
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-  }
-  .lb-slide {
-    flex: 0 0 100%;
-    width: 100%; height: 100%;
-    scroll-snap-align: center;
-    display: flex; align-items: center; justify-content: center;
-    padding: 24px;
-  }
-  .lb-slide img {
-    max-width: 100%; max-height: 100%;
-    object-fit: contain; border-radius: 6px;
-  }
-  .lb-close {
-    position: absolute; top: 14px; right: 16px; z-index: 2;
-    width: 42px; height: 42px;
-    border: none; border-radius: 50%;
-    background: rgba(255,255,255,.16); color: #fff;
-    font-size: 26px; line-height: 1; cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .lb-close:active { background: rgba(255,255,255,.3); }
-  .bubble-name {
-    display: block;
-    font-size: 12px;
-    font-weight: 700;
-    margin-bottom: 2px;
-    opacity: .85;
-  }
-  .msg.out .bubble-name { color: rgba(255,255,255,.9); }
-  /* 말풍선 꼬리 (마지막 연속 버블에만) */
-  .msg.tail .bubble::before {
-    content: "";
-    position: absolute;
-    left: -6px; bottom: 0;
-    width: 18px; height: 16px;
-    background: var(--in-bubble);
-    border-bottom-right-radius: 16px;
-    z-index: -1;
-  }
-  .msg.tail .bubble::after {
-    content: "";
-    position: absolute;
-    left: -10px; bottom: 0;
-    width: 10px; height: 16px;
-    background: var(--bg);
-    border-bottom-right-radius: 12px;
-    z-index: -1;
-  }
-
-  /* 입력창 */
-  .room-input {
-    flex: 0 0 auto;
-    border-top: .5px solid var(--sep);
-    padding: 8px 12px;
-    padding-bottom: calc(8px + env(safe-area-inset-bottom));
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    background: var(--bg);
-    position: relative; z-index: 10;
-  }
-  .room-input .plus { width: 30px; height: 30px; color: var(--gray-text); flex: 0 0 auto; }
-  .room-input .field {
-    flex: 1 1 auto;
-    border: 1px solid var(--sep);
-    border-radius: 18px;
-    padding: 8px 14px;
-    font-size: 15px;
-    color: var(--gray-text);
+    height: 52px;
+    padding: 0 16px;
     display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--line2);
   }
-  .room-input .field svg { width: 22px; height: 22px; color: var(--gray-text); }
-  /* 축하 입력칸 은은한 파란 glow (1회) */
-  @keyframes fieldGlow {
-    0%   { box-shadow: 0 0 0 0 rgba(0,122,255,0);   border-color: var(--sep); }
-    50%  { box-shadow: 0 0 16px 3px rgba(0,122,255,.5); border-color: var(--blue); }
-    100% { box-shadow: 0 0 0 0 rgba(0,122,255,0);   border-color: var(--sep); }
-  }
-  .room-input .field.glow { animation: fieldGlow 1.3s ease; }
-  .room-input .send {
-    width: 32px; height: 32px; flex: 0 0 auto;
-    background: var(--blue);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .room-input .send svg { width: 18px; height: 18px; color: #fff; }
-  .room-input .field input {
-    flex: 1 1 auto; min-width: 0;
-    border: none; background: transparent; outline: none;
-    font-size: 15px; font-family: inherit; color: #000;
-  }
-  .room-input .field input::placeholder { color: var(--gray-text); }
-  .room-input .field input:disabled { color: var(--gray-text); }
-  .room-input .field .counter { font-size: 12px; color: var(--gray-text); flex: 0 0 auto; margin-left: 8px; }
+  .topbar .logo { font-size: 26px; }
+  .topbar .tb-icons { display: flex; gap: 20px; }
+  .topbar .tb-icons svg { width: 26px; height: 26px; stroke: var(--dark); fill: none; stroke-width: 1.8; }
 
-  /* 발신(내) 말풍선 */
-  .msg.out { justify-content: flex-end; transform-origin: right bottom; align-items: center; }
-  .msg.out .bubble { background: var(--blue); color: #fff; }
-  .msg.out.tail .bubble::before {
-    left: auto; right: -6px;
-    border-bottom-right-radius: 0; border-bottom-left-radius: 16px;
-    background: var(--blue);
+  /* ===== 스크롤 영역 ===== */
+  .app-scroll {
+    flex: 1 1 auto; min-height: 0;
+    overflow-y: auto; -webkit-overflow-scrolling: touch;
   }
-  .msg.out.tail .bubble::after {
-    left: auto; right: -10px;
-    border-bottom-right-radius: 0; border-bottom-left-radius: 12px;
-    background: var(--bg);
+
+  /* 프로필 */
+  .profile { padding: 20px 16px 0; }
+  .profile-top { display: flex; align-items: center; gap: 24px; }
+  .profile-ava {
+    width: 86px; height: 86px; border-radius: 50%;
+    padding: 3px; background: var(--ig); flex: 0 0 auto;
   }
-  .msg.out .del {
+  .profile-ava img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid #fff; }
+  .profile-stats { flex: 1 1 auto; display: flex; justify-content: space-around; text-align: center; }
+  .profile-stats .num { font-size: 19px; font-weight: 700; }
+  .profile-stats .lbl { font-size: 13px; color: #333; margin-top: 2px; }
+  .profile-name { margin-top: 14px; font-size: 17px; }
+  .profile-bio { margin-top: 4px; font-size: 14px; line-height: 1.5; color: #262626; white-space: pre-line; }
+  .profile-btns { display: flex; gap: 8px; margin-top: 14px; }
+  .profile-btns button {
+    flex: 1; height: 34px; border: none; border-radius: 8px;
+    font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer;
+    background: #efefef; color: var(--dark);
+  }
+  .profile-btns button.primary { background: var(--blue); color: #fff; }
+  .profile-btns button:active { opacity: .7; }
+
+  /* 하이라이트 */
+  .highlights {
+    display: flex; gap: 20px; padding: 20px 16px 18px;
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .highlights::-webkit-scrollbar { display: none; }
+  .hl { flex: 0 0 auto; text-align: center; cursor: pointer; }
+  .hl-ring {
+    width: 62px; height: 62px; border-radius: 50%;
+    border: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; background: #fafafa;
+  }
+  .hl-lbl { font-size: 12px; margin-top: 5px; color: #262626; }
+  .hl:active .hl-ring { transform: scale(.94); }
+
+  /* 그리드 탭 아이콘 줄 */
+  .grid-tabs {
+    display: flex; border-top: 1px solid var(--line);
+  }
+  .grid-tabs .gt {
+    flex: 1; height: 44px; display: flex; align-items: center; justify-content: center;
+    border-bottom: 1px solid var(--dark);
+  }
+  .grid-tabs .gt svg { width: 24px; height: 24px; }
+
+  /* 사진 그리드 */
+  .grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+    padding-bottom: 8px;
+  }
+  .grid .cell { position: relative; aspect-ratio: 1 / 1; overflow: hidden; cursor: pointer; background: #eee; }
+  .grid .cell img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .grid .cell:active img { filter: brightness(.9); }
+
+  /* ===== 하단 탭바 ===== */
+  .tabbar {
     flex: 0 0 auto;
-    width: 22px; height: 22px; margin-right: 8px;
-    border: none; border-radius: 50%;
-    background: #E4E4E6; color: #8E8E93;
-    font-size: 17px; line-height: 1; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .msg.out .del:active { background: #d5d5da; }
-
-  /* 꽃잎 흩날림 */
-  .petals { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 5; perspective: 600px; }
-  .petal {
-    position: absolute; top: -30px;
-    opacity: 0; will-change: transform;
-    animation-name: petalFall;
-    animation-timing-function: cubic-bezier(.45,.05,.55,.95);
-    animation-iteration-count: infinite;
-  }
-  .petal i {
-    display: block;
-    width: var(--size, 13px); height: var(--size, 13px);
-    border-radius: 100% 0 100% 0;
-    box-shadow: 0 2px 5px rgba(120,100,60,.16);
-    transform-style: preserve-3d;
-    animation-name: petalFlutter;
-    animation-timing-function: ease-in-out;
-    animation-iteration-count: infinite;
-  }
-  .petal i.lemon { background: radial-gradient(circle at 32% 28%, #fffef2 0%, #fff7b8 55%, #ffe871 100%); }
-  .petal i.pink  { background: radial-gradient(circle at 32% 28%, #fff5f8 0%, #ffd6e3 55%, #ffb9d1 100%); }
-  @keyframes petalFall {
-    0%   { transform: translate3d(0,-30px,0); opacity: 0; }
-    8%   { opacity: .9; }
-    88%  { opacity: .9; }
-    100% { transform: translate3d(var(--sway), 840px, 0); opacity: 0; }
-  }
-  @keyframes petalFlutter {
-    0%   { transform: rotateX(0deg) rotateY(0deg) rotate(0deg); }
-    50%  { transform: rotateX(160deg) rotateY(90deg) rotate(160deg); }
-    100% { transform: rotateX(360deg) rotateY(0deg) rotate(360deg); }
-  }
-
-  /* 사진 말풍선 */
-  .bubble.photo {
-    padding: 0; background: transparent; overflow: hidden;
-    max-width: 62%; border-radius: 18px;
-    box-shadow: 0 1px 4px rgba(0,0,0,.12);
-  }
-  .bubble.photo img {
-    display: block; width: 100%; height: auto; border-radius: 18px;
-  }
-
-  /* 챗봇 선택 버튼 */
-  .quick {
-    display: flex; flex-wrap: wrap; gap: 8px;
-    justify-content: flex-end;
-    margin: 8px 0 4px;
-    opacity: 0; transform: translateY(8px);
-    transition: opacity .3s ease, transform .3s ease;
-  }
-  .quick.show { opacity: 1; transform: translateY(0); }
-  .qbtn {
-    border: 1.5px solid var(--blue); color: var(--blue); background: #fff;
-    border-radius: 18px; padding: 8px 18px;
-    font-size: 15px; font-family: inherit; font-weight: 500;
-    cursor: pointer;
-  }
-  .qbtn:active { background: rgba(0,122,255,.1); }
-
-  /* 주소 복사 버튼 */
-  .copybtn {
-    display: inline-flex; align-items: center; justify-content: center;
-    vertical-align: middle;
-    width: 26px; height: 26px; margin-left: 6px; padding: 0;
-    border: none; border-radius: 50%;
-    background: rgba(0,0,0,.06); color: #007AFF;
-    cursor: pointer;
-  }
-  .copybtn svg { width: 15px; height: 15px; }
-  .copybtn:active { background: rgba(0,0,0,.14); }
-  /* 보낸(파란) 말풍선 안 복사 버튼은 흰색 */
-  .msg.out .copybtn { color: #fff; background: rgba(255,255,255,.22); }
-  .msg.out .copybtn:active { background: rgba(255,255,255,.38); }
-
-  /* 복사 토스트 */
-  .toast {
-    position: absolute;
-    left: 50%; bottom: 84px;
-    transform: translate(-50%, 8px);
-    background: rgba(0,0,0,.8); color: #fff;
-    font-size: 13px; padding: 8px 16px; border-radius: 18px;
-    white-space: nowrap;
-    opacity: 0; visibility: hidden;
-    transition: opacity .2s ease, transform .2s ease, visibility .2s;
+    height: calc(52px + env(safe-area-inset-bottom));
+    padding-bottom: env(safe-area-inset-bottom);
+    display: flex; align-items: stretch;
+    border-top: 1px solid var(--line2);
+    background: #fff;
     z-index: 60;
+  }
+  .tabbar .tab {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .tabbar .tab svg { width: 27px; height: 27px; stroke: var(--dark); fill: none; stroke-width: 1.8; transition: transform .15s; }
+  .tabbar .tab.on svg { fill: var(--dark); stroke: var(--dark); }
+  .tabbar .tab:active svg { transform: scale(.86); }
+
+  /* ===== 사진 상세(세로 피드) ===== */
+  .feed {
+    position: absolute; inset: 0; background: #fff; z-index: 200;
+    display: flex; flex-direction: column;
+    transform: translateX(100%); transition: transform .28s ease; visibility: hidden;
+  }
+  .feed.open { transform: translateX(0); visibility: visible; }
+  .feed-head {
+    flex: 0 0 auto; height: 50px; padding: 0 8px;
+    display: flex; align-items: center; gap: 6px;
+    border-bottom: 1px solid var(--line2);
+  }
+  .feed-head .fh-back { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .feed-head .fh-back svg { width: 26px; height: 26px; stroke: var(--dark); fill: none; stroke-width: 2.2; }
+  .feed-head .fh-title { font-size: 16px; font-weight: 700; }
+  .feed-head .fh-sub { font-size: 12px; color: var(--gray); margin-left: 2px; }
+  .feed-scroll { flex: 1 1 auto; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+
+  .post { border-bottom: 1px solid var(--line2); padding-bottom: 6px; }
+  .post-top { display: flex; align-items: center; gap: 10px; padding: 10px 14px; }
+  .post-top .p-ava { width: 34px; height: 34px; border-radius: 50%; padding: 2px; background: var(--ig); }
+  .post-top .p-ava img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 1.5px solid #fff; }
+  .post-top .p-name { font-size: 14px; font-weight: 600; }
+  .post-imgwrap { position: relative; width: 100%; background: #f2f2f2; }
+  .post-imgwrap img { width: 100%; display: block; }
+  .post-imgwrap .heart-burst {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0);
+    width: 96px; height: 96px; pointer-events: none; opacity: 0;
+  }
+  .post-imgwrap .heart-burst svg { width: 100%; height: 100%; fill: #fff; filter: drop-shadow(0 2px 6px rgba(0,0,0,.4)); }
+  .post-imgwrap .heart-burst.go { animation: burst .9s ease forwards; }
+  @keyframes burst {
+    0%{opacity:0;transform:translate(-50%,-50%) scale(0)}
+    15%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}
+    30%{transform:translate(-50%,-50%) scale(.95)}
+    45%{transform:translate(-50%,-50%) scale(1)}
+    80%{opacity:1}
+    100%{opacity:0;transform:translate(-50%,-50%) scale(1)}
+  }
+  .post-actions { display: flex; align-items: center; gap: 16px; padding: 10px 14px 4px; }
+  .post-actions svg { width: 26px; height: 26px; stroke: var(--dark); fill: none; stroke-width: 1.9; cursor: pointer; }
+  .post-actions .like.liked svg { fill: #ed4956; stroke: #ed4956; }
+  .post-actions .spacer { flex: 1; }
+  .post-likes { padding: 2px 14px; font-size: 14px; font-weight: 600; }
+  .post-caption { padding: 4px 14px 2px; font-size: 14px; line-height: 1.45; }
+  .post-caption b { font-weight: 600; margin-right: 6px; }
+  .post-date { padding: 4px 14px 10px; font-size: 11px; color: var(--gray); text-transform: uppercase; }
+
+  /* ===== 바텀시트 팝업 ===== */
+  .backdrop {
+    position: absolute; inset: 0; background: rgba(0,0,0,.45); z-index: 300;
+    opacity: 0; visibility: hidden; transition: opacity .28s ease, visibility .28s;
+  }
+  .backdrop.show { opacity: 1; visibility: visible; }
+  .sheet {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 320;
+    background: #fff; border-radius: 20px 20px 0 0;
+    max-height: 86%; display: flex; flex-direction: column;
+    transform: translateY(100%); transition: transform .32s cubic-bezier(.22,1,.36,1);
+    box-shadow: 0 -8px 30px rgba(0,0,0,.15);
+  }
+  .sheet.open { transform: translateY(0); }
+  .sheet-grip { width: 40px; height: 4px; border-radius: 2px; background: #ccc; margin: 10px auto 4px; flex: 0 0 auto; }
+  .sheet-head {
+    flex: 0 0 auto; text-align: center; padding: 8px 16px 14px;
+    border-bottom: 1px solid var(--line2); position: relative;
+  }
+  .sheet-title { font-size: 17px; font-weight: 700; }
+  .sheet-close {
+    position: absolute; top: 4px; right: 12px;
+    width: 34px; height: 34px; border: none; background: none; cursor: pointer;
+    font-size: 26px; color: #999; line-height: 1;
+  }
+  .sheet-body { flex: 1 1 auto; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 20px 20px 28px; }
+
+  /* 예식 정보 */
+  .info-en { text-align: center; font-size: 15px; letter-spacing: 3px; color: var(--gray); text-transform: uppercase; }
+  .info-date { text-align: center; font-size: 34px; margin-top: 10px; }
+  .info-time { text-align: center; font-size: 17px; color: #444; margin-top: 6px; }
+  .info-dday {
+    margin: 20px auto 0; width: fit-content;
+    background: #fef1c7; color: #7a5b00; font-weight: 700;
+    padding: 8px 20px; border-radius: 20px; font-size: 15px;
+  }
+  .info-divider { height: 1px; background: var(--line2); margin: 24px 0; }
+  .info-place-en { text-align: center; font-size: 22px; letter-spacing: 1px; }
+  .info-place-ko { text-align: center; font-size: 17px; font-weight: 600; margin-top: 8px; }
+  .info-addr { text-align: center; font-size: 14px; color: #555; margin-top: 6px; }
+
+  /* 축의금 */
+  .acct { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-bottom: 14px; }
+  .acct-head {
+    display: flex; align-items: center; gap: 10px; padding: 14px 16px;
+    font-size: 15px; font-weight: 600; cursor: pointer; background: #fafafa;
+  }
+  .acct-head .emo { font-size: 20px; }
+  .acct-head .chev { margin-left: auto; transition: transform .25s; }
+  .acct-head.open .chev { transform: rotate(180deg); }
+  .acct-panel { max-height: 0; overflow: hidden; transition: max-height .3s ease; }
+  .acct-panel.open { max-height: 120px; }
+  .acct-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-top: 1px solid var(--line2); }
+  .acct-who { font-size: 12px; color: var(--gray); }
+  .acct-num { font-size: 15px; margin-top: 3px; }
+  .acct-copy {
+    border: none; background: #efefef; border-radius: 8px; cursor: pointer;
+    padding: 8px 14px; font-size: 13px; font-weight: 600; font-family: inherit; color: var(--dark);
+  }
+  .acct-copy:active { opacity: .6; }
+  .gift-desc { text-align: center; font-size: 14px; color: var(--gray); line-height: 1.6; margin-bottom: 20px; }
+
+  /* 오시는 길 */
+  .map-place { text-align: center; font-size: 18px; font-weight: 700; }
+  .map-addr { text-align: center; font-size: 14px; color: #555; margin: 6px 0 16px; }
+  .map-links { display: flex; gap: 8px; margin-bottom: 22px; }
+  .map-links a {
+    flex: 1; height: 46px; border: 1px solid var(--line); border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 600; color: var(--dark); text-decoration: none;
+  }
+  .map-links a:active { background: #f3f3f3; }
+  .tp { padding: 14px 0; border-top: 1px solid var(--line2); }
+  .tp:first-of-type { border-top: none; }
+  .tp-label { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+  .tp-desc { font-size: 14px; color: #444; line-height: 1.6; white-space: pre-line; }
+
+  /* 방명록 / 축하 메시지 */
+  .msg-form { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+  .msg-form textarea {
+    width: 100%; height: 90px; resize: none; border: 1px solid var(--line); border-radius: 12px;
+    padding: 12px 14px; font-size: 15px; font-family: inherit; outline: none;
+  }
+  .msg-form .msg-meta { display: flex; gap: 8px; }
+  .msg-form input {
+    flex: 1; min-width: 0; height: 44px; border: 1px solid var(--line); border-radius: 12px;
+    padding: 0 14px; font-size: 15px; font-family: inherit; outline: none;
+  }
+  .msg-form textarea:focus, .msg-form input:focus { border-color: var(--dark); }
+  .msg-send {
+    height: 46px; border: none; border-radius: 12px; background: var(--blue); color: #fff;
+    font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer;
+  }
+  .msg-send:active { opacity: .8; }
+  .msg-count { text-align: right; font-size: 12px; color: var(--gray); margin: -2px 2px 0; }
+  .msg-list { display: flex; flex-direction: column; gap: 0; }
+  .msg-item { display: flex; gap: 10px; padding: 14px 0; border-top: 1px solid var(--line2); }
+  .msg-item .mi-ava {
+    width: 36px; height: 36px; border-radius: 50%; flex: 0 0 auto;
+    background: var(--ig); display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 16px; font-weight: 700;
+  }
+  .msg-item .mi-body { flex: 1 1 auto; min-width: 0; }
+  .msg-item .mi-name { font-size: 14px; font-weight: 700; }
+  .msg-item .mi-text { font-size: 14px; line-height: 1.5; margin-top: 2px; word-break: break-word; }
+  .msg-item .mi-del { border: none; background: none; color: #bbb; font-size: 18px; cursor: pointer; padding: 0 2px; height: fit-content; }
+  .msg-empty { text-align: center; color: var(--gray); font-size: 14px; padding: 30px 0; }
+
+  /* 토스트 */
+  .toast {
+    position: absolute; left: 50%; bottom: 90px; transform: translate(-50%, 8px);
+    background: rgba(0,0,0,.82); color: #fff; font-size: 14px; padding: 10px 18px;
+    border-radius: 20px; white-space: nowrap; z-index: 400;
+    opacity: 0; visibility: hidden; transition: opacity .2s, transform .2s, visibility .2s;
   }
   .toast.show { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
 
-  /* ===== 비밀번호 팝업 (iOS alert) ===== */
-  .modal-overlay {
-    position: absolute; inset: 0;
-    background: rgba(0,0,0,.4);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 200;
-    opacity: 0; visibility: hidden;
-    transition: opacity .2s ease, visibility .2s;
+  /* 비밀번호 모달 */
+  .pw-overlay {
+    position: absolute; inset: 0; background: rgba(0,0,0,.4);
+    display: flex; align-items: center; justify-content: center; z-index: 450;
+    opacity: 0; visibility: hidden; transition: opacity .2s, visibility .2s;
   }
-  .modal-overlay.show { opacity: 1; visibility: visible; }
-  .modal {
-    width: 272px;
-    background: #f7f7f7;
-    border-radius: 14px;
-    overflow: hidden;
-    text-align: center;
-    box-shadow: 0 10px 40px rgba(0,0,0,.2);
-    transform: scale(.92);
-    transition: transform .2s ease;
+  .pw-overlay.show { opacity: 1; visibility: visible; }
+  .pw-box { width: 270px; background: #fff; border-radius: 16px; overflow: hidden; text-align: center; }
+  .pw-box h4 { padding: 18px 16px 4px; font-size: 16px; }
+  .pw-box p { font-size: 12px; color: #666; padding: 0 16px; }
+  .pw-box input {
+    margin: 12px 16px 4px; width: calc(100% - 32px); border: 1px solid var(--line);
+    border-radius: 8px; padding: 9px; text-align: center; font-size: 15px; outline: none; font-family: inherit;
   }
-  .modal-overlay.show .modal { transform: scale(1); }
-  .modal-head { padding: 19px 17px 4px; }
-  .modal-title { font-size: 17px; font-weight: 600; }
-  .modal-desc { font-size: 12px; color: #444; margin-top: 4px; line-height: 1.4; }
-  .modal-input {
-    margin: 12px 16px 2px;
-    width: calc(100% - 32px);
-    border: 1px solid #c4c4c6; border-radius: 7px;
-    padding: 8px 10px; font-size: 14px; text-align: center;
-    outline: none; font-family: inherit;
-  }
-  .modal-input:focus { border-color: var(--blue); }
-  .modal-err { font-size: 12px; color: #ff3b30; min-height: 14px; margin: 6px 0 2px; }
-  .modal-actions { display: flex; border-top: .5px solid #c4c4c6; }
-  .modal-actions button {
-    flex: 1; padding: 11px; font-size: 17px;
-    color: var(--blue); background: none; border: none; cursor: pointer;
-    font-family: inherit;
-  }
-  .modal-actions button:active { background: #ececec; }
-  .modal-actions .cancel { border-right: .5px solid #c4c4c6; }
-  .modal-actions .ok { font-weight: 600; }
+  .pw-err { color: #ed4956; font-size: 12px; min-height: 14px; }
+  .pw-actions { display: flex; border-top: 1px solid var(--line2); margin-top: 8px; }
+  .pw-actions button { flex: 1; padding: 12px; font-size: 16px; border: none; background: none; cursor: pointer; color: var(--blue); font-family: inherit; }
+  .pw-actions .pw-ok { font-weight: 700; }
+  .pw-actions .pw-cancel { border-right: 1px solid var(--line2); }
 </style>
 </head>
 <body>
@@ -559,650 +342,452 @@
   <!-- 스플래시 -->
   <div class="splash" id="splash">
     <div class="splash-logo">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M12 4C7 4 3 7.2 3 11.2c0 2.3 1.3 4.3 3.4 5.6-.2 1-.7 2.3-1.5 3.2 0 0 2.5-.3 4.2-1.6.9.2 1.9.4 2.9.4 5 0 9-3.2 9-7.2S17 4 12 4z" fill="#fff"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="#fff" stroke="none"/></svg>
     </div>
-    <div class="splash-title">찬영 ❤︎ 예경</div>
-    <div class="splash-sub">결혼식에 초대합니다.</div>
+    <div class="splash-title handwrite">찬영 ❤︎ 예경</div>
+    <div class="splash-sub">우리, 결혼합니다</div>
   </div>
 
-  <!-- 메시지 목록 화면 -->
-  <div class="list-screen">
-    <div class="nav-top">
-      <button class="nav-back" onclick="if(history.length>1){history.back()}else{location.href='../index.html'}" aria-label="뒤로">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-      </button>
-      <span class="compose" id="likeBtn" onclick="toggleLike()" role="button" aria-label="사랑합니다">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-      </span>
+  <!-- 상단바 -->
+  <div class="topbar">
+    <span class="logo handwrite">chanyoung ♥ yegyeong</span>
+    <span class="tb-icons">
+      <svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+    </span>
+  </div>
+
+  <!-- 앱 스크롤 -->
+  <div class="app-scroll" id="appScroll">
+    <!-- 프로필 -->
+    <div class="profile">
+      <div class="profile-top">
+        <div class="profile-ava"><img src="photo01.jpg" alt=""></div>
+        <div class="profile-stats">
+          <div><div class="num" id="statPosts">18</div><div class="lbl">게시물</div></div>
+          <div><div class="num" id="statDday">D-?</div><div class="lbl">남은 날</div></div>
+          <div><div class="num">9.20</div><div class="lbl">그날</div></div>
+        </div>
+      </div>
+      <div class="profile-name handwrite">찬영 ❤︎ 예경</div>
+      <div class="profile-bio">2026. 09. 20. SUN 11:00 AM
+📍 더 베일리하우스 삼성
+행복한 순간에 여러분을 초대합니다 💌</div>
+      <div class="profile-btns">
+        <button class="primary" onclick="openSheet('msg')">축하 메시지</button>
+        <button onclick="openSheet('map')">오시는 길</button>
+        <button onclick="openSheet('gift')">축의금</button>
+      </div>
     </div>
-    <div class="large-title">메시지</div>
-    <div class="search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
-      <span>검색</span>
+
+    <!-- 하이라이트 -->
+    <div class="highlights">
+      <div class="hl" onclick="openSheet('info')"><div class="hl-ring">💒</div><div class="hl-lbl">예식정보</div></div>
+      <div class="hl" onclick="openSheet('map')"><div class="hl-ring">📍</div><div class="hl-lbl">오시는길</div></div>
+      <div class="hl" onclick="openSheet('gift')"><div class="hl-ring">💌</div><div class="hl-lbl">축의금</div></div>
+      <div class="hl" onclick="openSheet('msg')"><div class="hl-ring">✍️</div><div class="hl-lbl">방명록</div></div>
     </div>
 
-    <div class="list">
+    <!-- 그리드 탭 아이콘 -->
+    <div class="grid-tabs">
+      <div class="gt"><svg viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></div>
+    </div>
 
-      <div class="row" data-room="main">
-        <div class="unread-dot hidden"></div>
-        <div class="avatar">📄</div>
-        <div class="row-body">
-          <div class="row-top">
-            <span class="row-name">인사팀</span>
-            <span class="row-time">오후 1:55 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
-          </div>
-          <div class="row-msg">[인사] 채용 완료 안내</div>
-        </div>
-      </div>
+    <!-- 사진 그리드 -->
+    <div class="grid" id="grid"></div>
+  </div>
 
-      <div class="row" data-room="greeting">
-        <div class="unread-dot"></div>
-        <div class="avatar">📢</div>
-        <div class="row-body">
-          <div class="row-top">
-            <span class="row-name">긴급 안내 문자</span>
-            <span class="row-time">오후 1:55 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
-          </div>
-          <div class="row-msg">[서울시] 2026.09.20 11:00 행복지수 높음 안내</div>
-        </div>
-      </div>
-
-      <div class="row" data-room="schedule">
-        <div class="unread-dot"></div>
-        <div class="avatar">📦</div>
-        <div class="row-body">
-          <div class="row-top">
-            <span class="row-name">로켓배송</span>
-            <span class="row-time">오후 1:45 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
-          </div>
-          <div class="row-msg">[Web발신] 배송 준비 완료</div>
-        </div>
-      </div>
-
-      <div class="row" data-room="parking">
-        <div class="unread-dot hidden"></div>
-        <div class="avatar">🚗</div>
-        <div class="row-body">
-          <div class="row-top">
-            <span class="row-name">한국도로공사</span>
-            <span class="row-time">오후 1:30 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
-          </div>
-          <div class="row-msg">더 베일리하우스 방면으로 이동 방법 알려드립니다.</div>
-        </div>
-      </div>
-
-      <div class="row" data-room="gift">
-        <div class="unread-dot hidden"></div>
-        <div class="avatar">⚽</div>
-        <div class="row-body">
-          <div class="row-top">
-            <span class="row-name">손흥민</span>
-            <span class="row-time">오후 1:20 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
-          </div>
-          <div class="row-msg">LA에 있어서 못 가지만, 마음만 보낼게!</div>
-        </div>
-      </div>
-
-      <div class="row" data-room="congrats">
-        <div class="unread-dot"></div>
-        <div class="avatar">✏️</div>
-        <div class="row-body">
-          <div class="row-top">
-            <span class="row-name">새로운 메시지</span>
-            <span class="row-time">오후 1:10 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
-          </div>
-          <div class="row-msg">예경, 찬영아! 결혼 축하해!</div>
-        </div>
-      </div>
-
-      <div class="row" data-room="gallery">
-        <div class="unread-dot"></div>
-        <div class="avatar">🖼️</div>
-        <div class="row-body">
-          <div class="row-top">
-            <span class="row-name">국립현대사진관</span>
-            <span class="row-time">오후 1:00 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></span>
-          </div>
-          <div class="row-msg">해당 사진의 전시를 제안드립니다.</div>
-        </div>
-      </div>
-
+  <!-- 하단 탭바 -->
+  <div class="tabbar">
+    <div class="tab on" id="tab-home" onclick="goHome()">
+      <svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V9.5z"/></svg>
+    </div>
+    <div class="tab" id="tab-info" onclick="openSheet('info')">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+    </div>
+    <div class="tab" id="tab-msg" onclick="openSheet('msg')">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+    </div>
+    <div class="tab" id="tab-gift" onclick="openSheet('gift')">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><circle cx="12" cy="12" r="2.6"/><line x1="6" y1="9.5" x2="6" y2="9.6"/><line x1="18" y1="14.4" x2="18" y2="14.5"/></svg>
+    </div>
+    <div class="tab" id="tab-map" onclick="openSheet('map')">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-5.6-7-11a7 7 0 0 1 14 0c0 5.4-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/></svg>
     </div>
   </div>
 
-  <!-- ===== 공용 채팅방 화면 ===== -->
-  <div class="room" id="room">
-    <div class="room-header">
-      <span class="back" id="roomBack">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 18l-6-6 6-6"/></svg>
-        <span>메시지</span>
-      </span>
-      <span class="who">
-        <span class="ava" id="roomAva">👩🏻‍❤️‍👨🏻</span>
-        <span class="nm"><span id="roomName">신랑·신부</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></span>
-      </span>
-      <span></span>
+  <!-- ===== 사진 상세 (세로 피드) ===== -->
+  <div class="feed" id="feed">
+    <div class="feed-head">
+      <div class="fh-back" id="feedBack"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></div>
+      <div><div class="fh-title">게시물</div></div>
     </div>
+    <div class="feed-scroll" id="feedScroll"></div>
+  </div>
 
-    <div class="petals" id="petals"></div>
-    <div class="room-body" id="roomBody"></div>
+  <!-- ===== 바텀시트 ===== -->
+  <div class="backdrop" id="backdrop" onclick="closeSheet()"></div>
 
-    <div class="room-input">
-      <svg class="plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
-      <span class="field">
-        <input id="msgInput" type="text" maxlength="30" placeholder="iMessage" disabled>
-        <span class="counter" id="counter" style="display:none">0/30</span>
-      </span>
-      <span class="send" id="sendBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span>
+  <!-- 예식 정보 -->
+  <div class="sheet" id="sheet-info">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head"><div class="sheet-title">예식 안내</div><button class="sheet-close" onclick="closeSheet()">&times;</button></div>
+    <div class="sheet-body">
+      <div class="info-en">the wedding day</div>
+      <div class="info-date handwrite">2026. 9. 20.</div>
+      <div class="info-time">일요일 · 오전 11시</div>
+      <div class="info-dday" id="ddayText">D-?</div>
+      <div class="info-divider"></div>
+      <div class="info-place-en handwrite">The Baily House</div>
+      <div class="info-place-ko">더 베일리하우스 삼성</div>
+      <div class="info-addr">서울 강남구 영동대로 506</div>
     </div>
   </div>
 
-  <!-- 비밀번호 팝업 -->
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal">
-      <div class="modal-head">
-        <div class="modal-title" id="modalTitle">비밀번호</div>
-        <div class="modal-desc" id="modalDesc"></div>
-        <input class="modal-input" id="modalName" type="text" maxlength="12" placeholder="이름" autocomplete="off" style="display:none; margin-bottom:8px;">
-        <input class="modal-input" id="modalInput" type="password" inputmode="numeric" autocomplete="off">
-        <div class="modal-err" id="modalErr"></div>
+  <!-- 축하 메시지 -->
+  <div class="sheet" id="sheet-msg">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head"><div class="sheet-title">축하 메시지</div><button class="sheet-close" onclick="closeSheet()">&times;</button></div>
+    <div class="sheet-body">
+      <div class="msg-form">
+        <textarea id="msgText" maxlength="200" placeholder="신랑·신부에게 축하의 한마디를 남겨주세요 🎉"></textarea>
+        <div class="msg-count"><span id="msgCount">0</span>/200</div>
+        <div class="msg-meta">
+          <input id="msgName" type="text" maxlength="12" placeholder="이름">
+          <input id="msgPw" type="password" inputmode="numeric" maxlength="4" placeholder="비밀번호 4자리">
+        </div>
+        <button class="msg-send" onclick="submitMessage()">보내기</button>
       </div>
-      <div class="modal-actions">
-        <button class="cancel" id="modalCancel">취소</button>
-        <button class="ok" id="modalOk">확인</button>
+      <div class="msg-list" id="msgList"><div class="msg-empty">첫 번째 축하 메시지를 남겨주세요 💐</div></div>
+    </div>
+  </div>
+
+  <!-- 축의금 -->
+  <div class="sheet" id="sheet-gift">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head"><div class="sheet-title">마음 전하는 곳</div><button class="sheet-close" onclick="closeSheet()">&times;</button></div>
+    <div class="sheet-body">
+      <div class="gift-desc">참석이 어려우신 분들을 위해 기재했습니다.<br>너그러운 마음으로 양해 부탁드립니다.</div>
+      <div class="acct">
+        <div class="acct-head" onclick="toggleAcct(this)">
+          <span class="emo">🤵</span> 신랑 측 계좌
+          <svg class="chev" width="14" height="8" viewBox="0 0 14 8" fill="none"><path d="M1 1l6 6 6-6" stroke="#888" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <div class="acct-panel">
+          <div class="acct-row">
+            <div><div class="acct-who">신랑 조찬영</div><div class="acct-num">하나은행 155-910334-24507</div></div>
+            <button class="acct-copy" onclick="copyText('15591033424507');showToast('복사되었습니다')">복사</button>
+          </div>
+        </div>
+      </div>
+      <div class="acct">
+        <div class="acct-head" onclick="toggleAcct(this)">
+          <span class="emo">👰</span> 신부 측 계좌
+          <svg class="chev" width="14" height="8" viewBox="0 0 14 8" fill="none"><path d="M1 1l6 6 6-6" stroke="#888" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <div class="acct-panel">
+          <div class="acct-row">
+            <div><div class="acct-who">신부 황예경</div><div class="acct-num">국민은행 501602-01-276833</div></div>
+            <button class="acct-copy" onclick="copyText('50160201276833');showToast('복사되었습니다')">복사</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- 토스트 (목록·채팅방 어디서든 표시) -->
+  <!-- 오시는 길 -->
+  <div class="sheet" id="sheet-map">
+    <div class="sheet-grip"></div>
+    <div class="sheet-head"><div class="sheet-title">오시는 길</div><button class="sheet-close" onclick="closeSheet()">&times;</button></div>
+    <div class="sheet-body">
+      <div class="map-place">더 베일리하우스 삼성</div>
+      <div class="map-addr">서울 강남구 영동대로 506</div>
+      <div class="map-links">
+        <a href="https://naver.me/I55aZqB6" target="_blank">네이버</a>
+        <a href="https://kko.to/nDGBGzKqvW" target="_blank">카카오</a>
+        <a href="https://tmap.life/f66632d7" target="_blank">티맵</a>
+      </div>
+      <div class="tp">
+        <div class="tp-label">🚇 지하철</div>
+        <div class="tp-desc">2호선 삼성역 7번 출구 도보 1분</div>
+      </div>
+      <div class="tp">
+        <div class="tp-label">🚌 버스</div>
+        <div class="tp-desc">삼성역 7번 출구 하차
+[간선] 143, 146, 301, 342, 343, 345, 401, 8146, N61
+[지선] 2413, 2415, 3217, 3412, 3414, 3417, 4318
+[광역] 9407, 9507, 9607</div>
+      </div>
+      <div class="tp">
+        <div class="tp-label">🅿️ 자가용 · 주차</div>
+        <div class="tp-desc">주차는 더 베일리하우스 앞에서 안내 받으시기 바랍니다.
+주변 교통이 혼잡할 수 있으니 가급적 대중교통을 이용해 주세요 🙏</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 토스트 -->
   <div class="toast" id="toast"></div>
 
-  <!-- 사진 라이트박스 (가로 스크롤) -->
-  <div class="lightbox" id="lightbox">
-    <button class="lb-close" id="lbClose" aria-label="닫기">&times;</button>
-    <div class="lb-track" id="lbTrack"></div>
+  <!-- 비밀번호 모달 -->
+  <div class="pw-overlay" id="pwOverlay">
+    <div class="pw-box">
+      <h4>메시지 삭제</h4>
+      <p>설정한 비밀번호를 입력하세요</p>
+      <input id="pwInput" type="password" inputmode="numeric" maxlength="4">
+      <div class="pw-err" id="pwErr"></div>
+      <div class="pw-actions">
+        <button class="pw-cancel" onclick="closePw()">취소</button>
+        <button class="pw-ok" onclick="confirmPw()">삭제</button>
+      </div>
+    </div>
   </div>
 
 </div>
 
 <script>
-  // ===== 구글 시트 연결 주소 =====
-  // 배포 후 받은 웹 앱 URL을 아래 따옴표 안에 붙여넣으세요.
-  // 비워두면(저장소 미연결) 메시지는 이 브라우저에만 임시로 남습니다.
+  // ===== 구글 시트 =====
   var SHEET_API = 'https://script.google.com/macros/s/AKfycbxzobOEev_gW3UGqXZcFuaWJAwwRZSZ3hI6TBE_Epq8W9DVI3Lip_ieZ-8PE1M5SC37AA/exec';
-
   function api(params){
-    // &_=타임스탬프 : 브라우저가 옛 응답을 캐시해 빈 목록을 보여주는 문제 방지
     var url = SHEET_API + '?' + new URLSearchParams(params).toString() + '&_=' + Date.now();
     return fetch(url, { method: 'GET' }).then(function(r){ return r.json(); });
   }
+  function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
 
-  // 스플래시 자동 사라짐
-  setTimeout(function(){
-    document.getElementById('splash').classList.add('hide');
-  }, 1800);
+  // ===== 사진 목록 =====
+  var PHOTOS = [];
+  for(var i = 1; i <= 18; i++){ PHOTOS.push('photo' + (i < 10 ? '0' + i : i) + '.jpg'); }
 
-  // ===== 채팅방 데이터 =====
-  var rooms = {
-    main: {
-      name: '인사팀', ava: '📄', time: '오후 1:55',
-      messages: [
-        '안녕하세요.',
-        "찬영, 예경님이 서로의 '평생 배우자' 로 최종 합격 하였음을 안내드립니다.",
-        '합격자 : 신랑 조찬영 / 신부 황예경\n입사일 : 2026.09.20\n근무형태 : 평생\n근무지 : 어디든 함께',
-        '앞으로 두 분의 새로운 여정에 축하 부탁드리며, 많은 응원 바랍니다.'
-      ]
-    },
-    greeting: {
-      name: '긴급 안내 문자', ava: '📢', time: '오후 1:55',
-      messages: [
-        '2026년 9월 20일 행복지수가 매우 높을 것으로 예보됩니다.',
-        '소중한 분들의 많은 축하와 함께해 주시기 바랍니다.',
-        '본 안내는 행복 확산을 위한 알림입니다. 😊'
-      ]
-    },
-    schedule: {
-      name: '로켓배송', ava: '📦', time: '오후 1:45',
-      messages: [
-        { text: "주문하신 '축하'가 배송 준비를 마쳤습니다.", nowrap: true },
-        '받는 곳 : 더 베일리하우스,\n서울 강남구 영동대로 506',
-        '배송날짜 : 2026.09.20 일요일\n오전 11시',
-        '받는 사람 : 신랑 조찬영 / 신부 황예경',
-        '정해진 시간에 직접 배달(참석) 부탁드립니다. 🎉'
-      ]
-    },
-    parking: {
-      name: '한국도로공사', ava: '🚗', time: '오후 1:30',
-      messages: [
-        '[교통안내] 더 베일리하우스 방면으로 이동 방법 알려드립니다.',
-        '어떤 교통수단 이용하시나요?'
-      ],
-      quick: {
-        options: [
-          { label: '지하철', reply: '🚇 지하철 이용 시\n지하철 2호선 삼성역 7번출구 도보 1분' },
-          { label: '버스', reply: '🚌 버스 이용 시\n삼성역 7번출구에서 하차\n\n[간선(파랑)] 143, 146, 301, 342, 343, 345, 401, 8146, N61(심야)\n[지선(초록)] 2413, 2415, 3217, 3412, 3414, 3417, 4318\n[광역(빨강)] 9407, 9507, 9607' },
-          { label: '자가용', reply: '🅿️ 자가용 이용 시\n주차는 더 베일리하우스 앞에서 안내 받으시기 바랍니다.\n\n주변 교통이 혼잡하여 주차 시간이 많이 소요될 수 있으니 가급적 대중교통을 이용해 주세요 🙏\n\n안전운전 하세요!' }
-        ]
-      }
-    },
-    gift: {
-      name: '손흥민', ava: '⚽', time: '오후 1:20',
-      messages: [
-        '어디로 보내면 될까?',
-        { text: '먼 길 오시기 어려운 분들을 위해\n마음 전하실 곳을 안내드립니다 💌', out: true },
-        { text: '🤵 신랑 측 (조찬영)\n하나은행 155-910334-24507', copy: '15591033424507', out: true },
-        { text: '👰 신부 측 (황예경)\n국민은행 501602-01-276833', copy: '50160201276833', out: true },
-        { text: '전해주시는 따뜻한 마음\n감사히 간직하겠습니다 🙏', out: true }
-      ]
-    },
-    congrats: {
-      name: '새로운 메시지', ava: '✏️', time: '오후 1:10',
-      messages: [
-        '저희에게 축하 한마디 남겨주세요 ✍️',
-        '아래 입력창에 메시지를 적어\n마음을 전해주세요 🎉'
-      ]
-    },
-    gallery: {
-      name: '국립현대사진관', ava: '🖼️', time: '오후 1:00',
-      messages: [
-        '해당 사진의 전시를 제안드립니다.',
-        { grid: ['photo01.jpg','photo02.jpg','photo03.jpg','photo04.jpg','photo05.jpg','photo06.jpg','photo07.jpg','photo08.jpg','photo09.jpg'] },
-        { grid: ['photo10.jpg','photo11.jpg','photo12.jpg','photo13.jpg','photo14.jpg','photo15.jpg','photo16.jpg','photo17.jpg','photo18.jpg'] }
-      ]
-    }
-  };
+  // 스플래시
+  setTimeout(function(){ document.getElementById('splash').classList.add('hide'); }, 1500);
 
-  var roomEl = document.getElementById('room');
-  var roomBody = document.getElementById('roomBody');
-  var roomTimers = [];
-  var currentRoom = null;
+  // D-day
+  (function(){
+    var wed = new Date('2026-09-20T00:00:00');
+    var today = new Date(); today.setHours(0,0,0,0);
+    var diff = Math.ceil((wed - today) / 86400000);
+    var txt = diff > 0 ? 'D-' + diff : (diff === 0 ? 'D-DAY' : 'D+' + (-diff));
+    document.getElementById('statDday').textContent = txt;
+    document.getElementById('ddayText').textContent = diff > 0 ? ('결혼식까지 D-' + diff) : (diff === 0 ? '오늘은 결혼식 날 🎉' : '함께해 주셔서 감사합니다');
+  })();
 
-  var msgInput = document.getElementById('msgInput');
-  var counter = document.getElementById('counter');
-  var sendBtn = document.getElementById('sendBtn');
+  // ===== 그리드 =====
+  var grid = document.getElementById('grid');
+  PHOTOS.forEach(function(src, idx){
+    var c = document.createElement('div');
+    c.className = 'cell';
+    c.innerHTML = '<img src="' + src + '" alt="" loading="lazy">';
+    c.addEventListener('click', function(){ openFeed(idx); });
+    grid.appendChild(c);
+  });
 
-  function escapeHtml(s){
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
+  // ===== 세로 피드 =====
+  var feed = document.getElementById('feed');
+  var feedScroll = document.getElementById('feedScroll');
+  var feedBuilt = false;
 
-  function addBubble(item, isLast){
-    var isObj = (typeof item === 'object' && item);
-    var img = isObj ? item.img : null;
-    var grid = isObj ? item.grid : null;
+  function buildFeed(){
+    if(feedBuilt) return;
+    var html = '';
+    PHOTOS.forEach(function(src, idx){
+      html +=
+        '<div class="post" id="post-' + idx + '">' +
+          '<div class="post-top"><div class="p-ava"><img src="photo01.jpg" alt=""></div><div class="p-name handwrite">chanyoung ♥ yegyeong</div></div>' +
+          '<div class="post-imgwrap" data-idx="' + idx + '">' +
+            '<img src="' + src + '" alt="" loading="lazy">' +
+            '<span class="heart-burst"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></span>' +
+          '</div>' +
+          '<div class="post-actions">' +
+            '<span class="like" data-idx="' + idx + '"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></span>' +
+            '<svg viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 0 1-9 8 8.4 8.4 0 0 1-3.8-.9L3 20l1.9-5.2A8.4 8.4 0 0 1 12 3.5a8.4 8.4 0 0 1 9 8z"/></svg>' +
+            '<svg viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>' +
+            '<span class="spacer"></span>' +
+            '<svg viewBox="0 0 24 24"><path d="M19 21l-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>' +
+          '</div>' +
+          '<div class="post-likes">좋아요 ' + (37 + idx * 3) + '개</div>' +
+          '<div class="post-caption"><b class="handwrite">chanyoung ♥ yegyeong</b>우리의 소중한 순간 · ' + (idx + 1) + ' 💛</div>' +
+          '<div class="post-date">2026. 9. 20.</div>' +
+        '</div>';
+    });
+    feedScroll.innerHTML = html;
+    feedBuilt = true;
 
-    // 3x3 사진 그리드 말풍선
-    if(grid){
-      var cells = '';
-      for(var gi = 0; gi < grid.length; gi++){
-        cells += grid[gi]
-          ? '<div class="gcell"><img src="' + grid[gi] + '" alt="" loading="lazy"></div>'
-          : '<div class="gcell empty"></div>';
-      }
-      var gmsg = document.createElement('div');
-      gmsg.className = 'msg';
-      gmsg.innerHTML = '<div class="bubble grid3">' + cells + '</div>';
-      roomBody.appendChild(gmsg);
-      void gmsg.offsetWidth;
-      requestAnimationFrame(function(){ gmsg.classList.add('show'); });
-      roomBody.scrollTop = roomBody.scrollHeight;
-      return;
-    }
-
-    // 사진 말풍선
-    if(img){
-      var pmsg = document.createElement('div');
-      pmsg.className = 'msg';
-      pmsg.innerHTML = '<div class="bubble photo"><img src="' + img + '" alt="" loading="lazy"></div>';
-      roomBody.appendChild(pmsg);
-      void pmsg.offsetWidth;
-      requestAnimationFrame(function(){ pmsg.classList.add('show'); });
-      roomBody.scrollTop = roomBody.scrollHeight;
-      return;
-    }
-
-    var text = (typeof item === 'string') ? item : item.text;
-    var copy = isObj ? item.copy : null;
-    var msg = document.createElement('div');
-    var isOut = isObj && item.out;
-    msg.className = 'msg' + (isOut ? ' out' : '') + (isLast ? ' tail tail-gap' : '');
-    var inner = escapeHtml(text);
-    if(copy){
-      inner += '<button class="copybtn" type="button" aria-label="복사" data-copy="' + escapeHtml(copy) + '">'
-        + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button>';
-    }
-    var bubbleCls = 'bubble' + (isObj && item.nowrap ? ' oneline' : '');
-    msg.innerHTML = '<div class="' + bubbleCls + '">' + inner + '</div>';
-    roomBody.appendChild(msg);
-    void msg.offsetWidth;
-    requestAnimationFrame(function(){ msg.classList.add('show'); });
-    roomBody.scrollTop = roomBody.scrollHeight;
-    if(copy){
-      var btn = msg.querySelector('.copybtn');
-      btn.addEventListener('click', function(){
-        copyText(btn.getAttribute('data-copy'));
-        showToast('복사되었습니다');
+    // 좋아요 버튼
+    feedScroll.querySelectorAll('.like').forEach(function(btn){
+      btn.addEventListener('click', function(){ toggleLike(btn.getAttribute('data-idx')); });
+    });
+    // 사진 더블탭 좋아요
+    feedScroll.querySelectorAll('.post-imgwrap').forEach(function(w){
+      var last = 0;
+      w.addEventListener('click', function(){
+        var now = Date.now();
+        if(now - last < 320){ likeWithBurst(w.getAttribute('data-idx')); }
+        last = now;
       });
-    }
+    });
   }
 
+  function toggleLike(idx){
+    var like = feedScroll.querySelector('.like[data-idx="' + idx + '"]');
+    if(like) like.classList.toggle('liked');
+  }
+  function likeWithBurst(idx){
+    var like = feedScroll.querySelector('.like[data-idx="' + idx + '"]');
+    if(like) like.classList.add('liked');
+    var burst = document.querySelector('#post-' + idx + ' .heart-burst');
+    if(burst){ burst.classList.remove('go'); void burst.offsetWidth; burst.classList.add('go'); }
+  }
+
+  function openFeed(idx){
+    buildFeed();
+    feed.classList.add('open');
+    requestAnimationFrame(function(){
+      var t = document.getElementById('post-' + idx);
+      if(t) feedScroll.scrollTop = t.offsetTop;
+    });
+  }
+  document.getElementById('feedBack').addEventListener('click', function(){ feed.classList.remove('open'); });
+
+  // ===== 하단 탭 & 바텀시트 =====
+  var backdrop = document.getElementById('backdrop');
+  var currentSheet = null;
+  var tabMap = { info: 'tab-info', msg: 'tab-msg', gift: 'tab-gift', map: 'tab-map' };
+
+  function setActiveTab(id){
+    document.querySelectorAll('.tabbar .tab').forEach(function(t){ t.classList.remove('on'); });
+    var el = document.getElementById(id);
+    if(el) el.classList.add('on');
+  }
+
+  function openSheet(name){
+    closeSheet(true);
+    var s = document.getElementById('sheet-' + name);
+    if(!s) return;
+    currentSheet = s;
+    backdrop.classList.add('show');
+    requestAnimationFrame(function(){ s.classList.add('open'); });
+    setActiveTab(tabMap[name]);
+    if(name === 'msg') loadMessages();
+  }
+  function closeSheet(silent){
+    document.querySelectorAll('.sheet').forEach(function(s){ s.classList.remove('open'); });
+    backdrop.classList.remove('show');
+    currentSheet = null;
+    if(!silent) setActiveTab('tab-home');
+  }
+  function goHome(){
+    closeSheet();
+    feed.classList.remove('open');
+    document.getElementById('appScroll').scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // 축의금 아코디언
+  function toggleAcct(head){
+    head.classList.toggle('open');
+    head.nextElementSibling.classList.toggle('open');
+  }
+
+  // 복사 & 토스트
   function copyText(str){
     if(navigator.clipboard && navigator.clipboard.writeText){
-      return navigator.clipboard.writeText(str).catch(function(){ fallbackCopy(str); });
-    }
-    fallbackCopy(str);
-    return Promise.resolve();
+      navigator.clipboard.writeText(str).catch(function(){ fallbackCopy(str); });
+    } else { fallbackCopy(str); }
   }
   function fallbackCopy(str){
-    var ta = document.createElement('textarea');
-    ta.value = str;
+    var ta = document.createElement('textarea'); ta.value = str;
     ta.style.position = 'fixed'; ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.focus(); ta.select();
+    document.body.appendChild(ta); ta.focus(); ta.select();
     try { document.execCommand('copy'); } catch(e) {}
     document.body.removeChild(ta);
   }
-
-  var toastEl = document.getElementById('toast');
-  var toastTimer = null;
-  function showToast(msg){
-    toastEl.textContent = msg;
-    toastEl.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, 1500);
+  var toastEl = document.getElementById('toast'); var toastTimer = null;
+  function showToast(m){
+    toastEl.textContent = m; toastEl.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, 1500);
   }
 
-  // 우측 상단 하트: 채우기 + "사랑합니다 ❤️" 토스트
-  function toggleLike(){
-    var el = document.getElementById('likeBtn');
-    el.classList.toggle('liked');
-    // 하트를 채울 때만 메시지 표시 (해제 시엔 표시 안 함)
-    if(el.classList.contains('liked')){
-      showToast('사랑합니다 ❤️');
-    }
-  }
+  // ===== 축하 메시지 =====
+  var msgText = document.getElementById('msgText');
+  var msgCount = document.getElementById('msgCount');
+  msgText.addEventListener('input', function(){ msgCount.textContent = msgText.value.length; });
+  document.getElementById('msgPw').addEventListener('input', function(){ this.value = this.value.replace(/[^0-9]/g,'').slice(0,4); });
 
-  // ===== 사진 라이트박스 (가로 스크롤) =====
-  var lightbox = document.getElementById('lightbox');
-  var lbTrack = document.getElementById('lbTrack');
-
-  function openGallery(srcList, index){
-    lbTrack.innerHTML = srcList.map(function(s){
-      return '<div class="lb-slide"><img src="' + s + '" alt="" loading="lazy"></div>';
-    }).join('');
-    lightbox.classList.add('show');
-    // 표시 후 클릭한 사진 위치로 이동
-    requestAnimationFrame(function(){
-      lbTrack.scrollLeft = index * lbTrack.clientWidth;
-    });
-  }
-  function closeLightbox(){ lightbox.classList.remove('show'); lbTrack.innerHTML = ''; }
-  document.getElementById('lbClose').addEventListener('click', closeLightbox);
-
-  // 그리드 사진 클릭 → 라이트박스 열기
-  roomBody.addEventListener('click', function(e){
-    if(e.target.tagName !== 'IMG') return;
-    if(!e.target.closest('.gcell')) return;
-    var imgs = Array.prototype.slice.call(roomBody.querySelectorAll('.gcell img'));
-    var srcs = imgs.map(function(i){ return i.getAttribute('src'); });
-    openGallery(srcs, imgs.indexOf(e.target));
-  });
-
-  function updateCounter(){ counter.textContent = msgInput.value.length + '/30'; }
-  msgInput.addEventListener('input', updateCounter);
-
-  // 발신(파란) 말풍선 - 삭제 없음 (챗봇 선택용)
-  function addOutSimple(text){
-    var msg = document.createElement('div');
-    msg.className = 'msg out tail tail-gap';
-    msg.innerHTML = '<div class="bubble">' + escapeHtml(text) + '</div>';
-    roomBody.appendChild(msg);
-    void msg.offsetWidth;
-    requestAnimationFrame(function(){ msg.classList.add('show'); });
-    roomBody.scrollTop = roomBody.scrollHeight;
-  }
-
-  // 챗봇 선택 버튼
-  function showQuickReplies(quick){
-    var wrap = document.createElement('div');
-    wrap.className = 'quick';
-    quick.options.forEach(function(opt){
-      var b = document.createElement('button');
-      b.className = 'qbtn';
-      b.type = 'button';
-      b.textContent = opt.label;
-      b.addEventListener('click', function(){
-        wrap.remove();
-        addOutSimple(opt.label);
-        roomTimers.push(setTimeout(function(){
-          addBubble(opt.reply, true);
-          roomTimers.push(setTimeout(function(){ showQuickReplies(quick); }, 350));
-        }, 550));
-      });
-      wrap.appendChild(b);
-    });
-    roomBody.appendChild(wrap);
-    void wrap.offsetWidth;
-    requestAnimationFrame(function(){ wrap.classList.add('show'); });
-    roomBody.scrollTop = roomBody.scrollHeight;
-  }
-
-  // 꽃잎 흩날림
-  function spawnPetals(){
-    var box = document.getElementById('petals');
-    box.innerHTML = '';
-    for(var i = 0; i < 18; i++){
-      var p = document.createElement('span');
-      p.className = 'petal';
-      var inner = document.createElement('i');
-      inner.className = Math.random() < 0.5 ? 'lemon' : 'pink';
-      p.appendChild(inner);
-      var fall = (12 + Math.random() * 8).toFixed(2);
-      var flutter = (2.6 + Math.random() * 2.4).toFixed(2);
-      var delay = (Math.random() * 14).toFixed(2);
-      p.style.left = (Math.random() * 100).toFixed(1) + '%';
-      p.style.setProperty('--size', (9 + Math.random() * 9).toFixed(0) + 'px');
-      p.style.setProperty('--sway', (Math.random() * 160 - 80).toFixed(0) + 'px');
-      p.style.animationDuration = fall + 's';
-      p.style.animationDelay = '-' + delay + 's';
-      inner.style.animationDuration = flutter + 's';
-      inner.style.animationDelay = '-' + (Math.random() * 2).toFixed(2) + 's';
-      box.appendChild(p);
-    }
-  }
-
-  function openRoom(key){
-    var data = rooms[key];
-    if(!data) return;
-    currentRoom = key;
-    spawnPetals();
-
-    // 이전 타이머 정리 & 초기화
-    roomTimers.forEach(clearTimeout);
-    roomTimers = [];
-    document.getElementById('roomName').textContent = data.name;
-    document.getElementById('roomAva').textContent = data.ava;
-    roomBody.innerHTML = '<div class="ts"><b>오늘</b> ' + data.time + '</div>';
-
-    // 축하 메시지 방에서만 입력 가능
-    if(key === 'congrats'){
-      msgInput.disabled = false;
-      msgInput.value = '';
-      msgInput.placeholder = '축하 메시지 (최대 30자)';
-      counter.style.display = 'block';
-    } else {
-      msgInput.disabled = true;
-      msgInput.value = '';
-      msgInput.placeholder = 'iMessage';
-      counter.style.display = 'none';
-    }
-    updateCounter();
-
-    roomEl.classList.add('open');
-
-    data.messages.forEach(function(t, i){
-      var id = setTimeout(function(){
-        addBubble(t, i === data.messages.length - 1);
-      }, 500 + i * 950);
-      roomTimers.push(id);
-    });
-
-    // 축하 메시지 방: 인사말 이후 저장된 메시지 불러오기
-    if(key === 'congrats'){
-      roomTimers.push(setTimeout(loadGuestMessages, 500 + data.messages.length * 950 + 300));
-      // 말풍선 등장 후 입력칸이 파랗게 한 번 은은하게 빛남
-      var fieldEl = document.querySelector('.room-input .field');
-      roomTimers.push(setTimeout(function(){
-        if(!fieldEl) return;
-        fieldEl.classList.remove('glow');
-        void fieldEl.offsetWidth; // 리플로우로 애니메이션 재시작 보장
-        fieldEl.classList.add('glow');
-        setTimeout(function(){ fieldEl.classList.remove('glow'); }, 1400);
-      }, 500 + (data.messages.length - 1) * 950 + 650));
-    }
-
-    // 주차 방: 인사말 이후 교통수단 선택 버튼 표시
-    if(data.quick){
-      roomTimers.push(setTimeout(function(){ showQuickReplies(data.quick); }, 500 + data.messages.length * 950 + 200));
-    }
-  }
-
-  // ===== 비밀번호 팝업 =====
-  var overlay = document.getElementById('modalOverlay');
-  var mTitle = document.getElementById('modalTitle');
-  var mDesc = document.getElementById('modalDesc');
-  var mInput = document.getElementById('modalInput');
-  var mName = document.getElementById('modalName');
-  var mErr = document.getElementById('modalErr');
-  var mOk = document.getElementById('modalOk');
-  var mCancel = document.getElementById('modalCancel');
-  var onOkCb = null;
-  var withName = false;
-
-  function showPrompt(o){
-    mTitle.textContent = o.title;
-    mDesc.textContent = o.desc || '';
-    mDesc.style.display = o.desc ? 'block' : 'none';
-    mInput.value = '';
-    withName = !!o.withName;
-    mName.value = '';
-    mName.style.display = withName ? 'block' : 'none';
-    mErr.textContent = '';
-    mOk.textContent = o.okText || '확인';
-    onOkCb = o.onOk;
-    overlay.classList.add('show');
-    setTimeout(function(){ (withName ? mName : mInput).focus(); }, 150);
-  }
-  function closeModal(){ overlay.classList.remove('show'); onOkCb = null; }
-
-  function submitModal(){
-    var v = mInput.value.trim();
-    var nm = mName.value.trim();
-    if(withName && !nm){ mErr.textContent = '이름을 입력해 주세요'; return; }
-    if(!v){ mErr.textContent = '비밀번호를 입력해 주세요'; return; }
-    mOk.disabled = true;
-    Promise.resolve(onOkCb ? onOkCb(v, nm) : true).then(function(res){
-      mOk.disabled = false;
-      if(res === true || res === undefined){ closeModal(); return; }
-      mErr.textContent = (typeof res === 'string') ? res : '비밀번호가 일치하지 않습니다';
-      mInput.value = '';
-    }).catch(function(){
-      mOk.disabled = false;
-      mErr.textContent = '오류가 발생했어요. 다시 시도해 주세요';
-    });
-  }
-  mOk.addEventListener('click', submitModal);
-  mCancel.addEventListener('click', closeModal);
-  mInput.addEventListener('keydown', function(e){ if(e.key === 'Enter') submitModal(); });
-  mName.addEventListener('keydown', function(e){ if(e.key === 'Enter') mInput.focus(); });
-
-  // ===== 발신 말풍선 + 삭제 =====
-  var msgSeq = 0;
-  var msgPw = {};
-
-  function addOutBubble(text, id, localPw, name){
-    var msg = document.createElement('div');
-    msg.className = 'msg out tail tail-gap';
-    var nameHtml = name ? '<span class="bubble-name">' + escapeHtml(name) + '</span>' : '';
-    msg.innerHTML = '<button class="del" aria-label="삭제">&times;</button><div class="bubble">' + nameHtml + escapeHtml(text) + '</div>';
-    roomBody.appendChild(msg);
-    void msg.offsetWidth;
-    requestAnimationFrame(function(){ msg.classList.add('show'); });
-    roomBody.scrollTop = roomBody.scrollHeight;
-    msg.querySelector('.del').addEventListener('click', function(){
-      showPrompt({
-        title: '메시지 삭제',
-        desc: '삭제하려면 설정한 비밀번호를 입력하세요',
-        okText: '삭제',
-        onOk: function(pw){
-          if(SHEET_API){
-            return api({ action: 'delete', id: id, password: pw }).then(function(r){
-              if(r && r.ok){ msg.remove(); return true; }
-              if(r && r.error === 'password') return false;
-              return '삭제에 실패했어요. 다시 시도해 주세요';
-            });
-          } else {
-            if(pw === localPw){ msg.remove(); return true; }
-            return false;
-          }
-        }
-      });
-    });
-  }
-
-  function sendCongrats(){
-    if(currentRoom !== 'congrats' || msgInput.disabled) return;
-    var text = msgInput.value.trim();
-    if(!text) return;
-    showPrompt({
-      title: '이름 · 비밀번호',
-      desc: '이름과, 삭제 시 사용할 비밀번호를 입력하세요',
-      okText: '보내기',
-      withName: true,
-      onOk: function(pw, nm){
-        var who = nm || '하객';
-        if(SHEET_API){
-          return api({ action: 'add', text: text, password: pw, name: who }).then(function(r){
-            if(r && r.ok){
-              addOutBubble(text, r.id, null, who);
-              msgInput.value = '';
-              updateCounter();
-              return true;
-            }
-            return '전송에 실패했어요. 다시 시도해 주세요';
-          });
-        } else {
-          var id = ++msgSeq;
-          addOutBubble(text, id, pw, who);
-          msgInput.value = '';
-          updateCounter();
-          return true;
-        }
+  var messagesLoaded = false;
+  function loadMessages(){
+    if(messagesLoaded) return;
+    messagesLoaded = true;
+    api({ action: 'list' }).then(function(r){
+      if(r && r.ok && r.messages){
+        var list = document.getElementById('msgList');
+        list.innerHTML = '';
+        // 서버는 오래된→최신. prepend 하면 최신이 위로.
+        r.messages.forEach(function(m){ prependMessage(m, list); });
+        if(!list.children.length){ list.innerHTML = '<div class="msg-empty">첫 번째 축하 메시지를 남겨주세요 💐</div>'; }
       }
-    });
-  }
-  sendBtn.addEventListener('click', sendCongrats);
-  msgInput.addEventListener('keydown', function(e){ if(e.key === 'Enter') sendCongrats(); });
-
-  // 저장된 축하 메시지 불러오기
-  function loadGuestMessages(){
-    // 저장된 축하 메시지는 chat에서 표시하지 않음 (index에만 노출)
-    // 작성은 그대로 구글 시트에 저장되므로 index에서는 계속 보임
-    return;
+    }).catch(function(){ messagesLoaded = false; });
   }
 
-  // 대화 클릭
-  document.querySelectorAll('.row').forEach(function(r){
-    r.addEventListener('click', function(){
-      var dot = r.querySelector('.unread-dot');
-      if(dot) dot.classList.add('hidden');
-      if(r.dataset.room) openRoom(r.dataset.room);
-    });
-  });
+  function prependMessage(m, list){
+    list = list || document.getElementById('msgList');
+    var empty = list.querySelector('.msg-empty'); if(empty) empty.remove();
+    var name = m.name || '하객';
+    var item = document.createElement('div');
+    item.className = 'msg-item';
+    if(m.id) item.dataset.id = m.id;
+    item.innerHTML =
+      '<div class="mi-ava">' + escapeHtml(name.charAt(0)) + '</div>' +
+      '<div class="mi-body"><div class="mi-name handwrite">' + escapeHtml(name) + '</div><div class="mi-text">' + escapeHtml(m.text) + '</div></div>' +
+      '<button class="mi-del" aria-label="삭제">&times;</button>';
+    item.querySelector('.mi-del').addEventListener('click', function(){ askDelete(item); });
+    list.insertBefore(item, list.firstChild);
+  }
 
-  // 뒤로가기
-  document.getElementById('roomBack').addEventListener('click', function(){
-    roomEl.classList.remove('open');
-  });
+  var submitting = false;
+  function submitMessage(){
+    var text = msgText.value.trim();
+    var name = document.getElementById('msgName').value.trim();
+    var pw = document.getElementById('msgPw').value.trim();
+    if(!text){ showToast('메시지를 입력해주세요'); return; }
+    if(!name){ showToast('이름을 입력해주세요'); return; }
+    if(!pw){ showToast('비밀번호를 설정해주세요'); return; }
+    if(submitting) return;
+    submitting = true;
+    api({ action: 'add', text: text, name: name, password: pw }).then(function(r){
+      submitting = false;
+      if(r && r.ok){
+        prependMessage({ id: r.id, text: text, name: name });
+        msgText.value = ''; msgCount.textContent = '0';
+        document.getElementById('msgName').value = '';
+        document.getElementById('msgPw').value = '';
+        showToast('축하 메시지가 등록되었어요 🎉');
+      } else { showToast('등록에 실패했어요. 다시 시도해 주세요'); }
+    }).catch(function(){ submitting = false; showToast('네트워크 오류가 발생했어요'); });
+  }
+
+  // 삭제 (비밀번호 모달)
+  var pwOverlay = document.getElementById('pwOverlay');
+  var pwInput = document.getElementById('pwInput');
+  var pwErr = document.getElementById('pwErr');
+  var pwTarget = null;
+  function askDelete(item){
+    var id = item.dataset.id;
+    if(!id){ item.remove(); return; }   // 서버에 없는 항목
+    pwTarget = item; pwInput.value = ''; pwErr.textContent = '';
+    pwOverlay.classList.add('show');
+    setTimeout(function(){ pwInput.focus(); }, 150);
+  }
+  function closePw(){ pwOverlay.classList.remove('show'); pwTarget = null; }
+  function confirmPw(){
+    var pw = pwInput.value.trim();
+    if(!pw){ pwErr.textContent = '비밀번호를 입력하세요'; return; }
+    if(!pwTarget){ closePw(); return; }
+    var id = pwTarget.dataset.id;
+    api({ action: 'delete', id: id, password: pw }).then(function(r){
+      if(r && r.ok){ pwTarget.remove(); closePw(); showToast('삭제되었습니다'); }
+      else if(r && r.error === 'password'){ pwErr.textContent = '비밀번호가 일치하지 않습니다'; }
+      else { pwErr.textContent = '삭제에 실패했어요'; }
+    }).catch(function(){ pwErr.textContent = '네트워크 오류가 발생했어요'; });
+  }
+  pwInput.addEventListener('keydown', function(e){ if(e.key === 'Enter') confirmPw(); });
 </script>
 </body>
 </html>
