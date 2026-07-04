@@ -1470,20 +1470,41 @@
   }
 
   // 저장된 축하메시지 불러오기 (chat에서 쓴 것도 함께 항상 표시됨)
-  // 페이지 로드 시 자동으로 뜨고, 주기적으로 갱신되어 다른 사람 메시지가 항상 노출됨
+  // ① 로컬 캐시를 즉시 표시(열자마자 바로 보임) → ② 최신본 받아 조용히 갱신
+  var WISH_CACHE_KEY = 'weddingWishesCache_v1';
   var lastWishSig = '';
+
+  function renderWishes(messages) {
+    var grid = document.getElementById('wish-grid');
+    grid.innerHTML = '';
+    // 서버는 오래된→최신 순. 순서대로 prepend하면 최신이 맨 위에 옴
+    messages.forEach(function (m) { try { prependWishCard(m); } catch (e) {} });
+  }
+
+  // ① 이전에 본 메시지를 이 브라우저(폰)에서 즉시 표시 (서버 응답 기다리지 않음)
+  (function () {
+    try {
+      var cached = localStorage.getItem(WISH_CACHE_KEY);
+      if (cached) {
+        var msgs = JSON.parse(cached);
+        if (msgs && msgs.length) {
+          renderWishes(msgs);
+          lastWishSig = msgs.map(function (m) { return m.id; }).join(',');
+        }
+      }
+    } catch (e) {}
+  })();
+
+  // ② 최신본을 받아 바뀐 경우에만 다시 그림 + 캐시 갱신
   function loadWishes() {
     if (!SHEET_API) return;
     api({ action: 'list' }).then(function (r) {
       if (r && r.ok && r.messages) {
-        // 목록이 바뀐 경우에만 다시 그림 (중복 방지 · 읽는 중 방해 최소화)
         var sig = r.messages.map(function (m) { return m.id; }).join(',');
-        if (sig === lastWishSig) return;
+        if (sig === lastWishSig) return;   // 변화 없으면 유지 (깜빡임 방지)
         lastWishSig = sig;
-        var grid = document.getElementById('wish-grid');
-        grid.innerHTML = '';
-        // 서버는 오래된→최신 순. 순서대로 prepend하면 최신이 맨 위에 옴
-        r.messages.forEach(function (m) { try { prependWishCard(m); } catch (e) {} });
+        renderWishes(r.messages);
+        try { localStorage.setItem(WISH_CACHE_KEY, JSON.stringify(r.messages)); } catch (e) {}
       }
     }).catch(function () {});
   }
