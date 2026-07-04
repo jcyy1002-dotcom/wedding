@@ -6,8 +6,8 @@
   <meta name="format-detection" content="telephone=no" />
   <title>청첩장 - 찬영 &amp; 예경</title>
   <style>
-    /* ── Pretendard (오픈소스 CDN) ── */
-    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
+    /* ── Spoqa Han Sans Neo (한글 전체 폰트) ── */
+    @import url('https://spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css');
 
     /* ── Sackers Gothic Std ── */
     @font-face {
@@ -76,7 +76,8 @@
       background: #e0e0e0;
       display: flex;
       justify-content: center;
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
+      font-weight: 500;
       overflow-x: hidden;
     }
 
@@ -228,9 +229,9 @@
 
     /* "예경과 찬영 결혼합니다." — 87MM ILSANG 36px */
     .invite-title {
-      font-family: '87MM ILSANG', serif;
-      font-size: 36px;
-      font-weight: 400;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
+      font-size: 40px;
+      font-weight: 700;
       color: var(--text);
       letter-spacing: -1.8px;
       margin-bottom: 40px;
@@ -239,9 +240,9 @@
 
     /* 본문 — 87MM ILSANG 25px, line-height 50px */
     .invite-body {
-      font-family: '87MM ILSANG', serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 22px;
-      font-weight: 400;
+      font-weight: 500;
       color: var(--text);
       line-height: 44px;
       letter-spacing: -1.25px;
@@ -255,12 +256,12 @@
       align-items: center;
       column-gap: 10px;
       row-gap: 45px;
-      /* 혼주 이름 — 87MM ILSANG 30px */
-      font-family: '87MM ILSANG', serif;
-      font-size: 30px;
-      font-weight: 400;
+      /* 혼주 이름 — 87MM ILSANG */
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
+      font-size: 40px;
+      font-weight: 700;
       color: var(--text);
-      line-height: 34px;
+      line-height: 46px;
       letter-spacing: -0.9px;
     }
 
@@ -280,13 +281,15 @@
 
     /* 이름 — 87MM ILSANG Regular (단일 굵기) */
     .parent-bold {
-      font-weight: 400;
+      font-weight: 700;
+      margin-left: 18px; /* "의 아들/딸" 과 이름 사이 간격 */
     }
 
     /* 의 아들/딸 */
     .parent-suffix {
-      font-size: 22px;
+      font-size: 26px;
       letter-spacing: -0.66px;
+      font-weight: 500;
     }
 
     /* ── 03 WEDDING DAY (Figma: 버드 88×65, WEDDING DAY 65px, "9" 50px) ── */
@@ -394,9 +397,9 @@
 
     /* 날짜 텍스트 — 87MM ILSANG 30px */
     .wedding-date-text {
-      font-family: '87MM ILSANG', serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 30px;
-      font-weight: 400;
+      font-weight: 700;
       color: var(--text);
       letter-spacing: -0.64px;
       margin-top: 60px;
@@ -409,9 +412,9 @@
       align-items: center;
       justify-content: center;
       gap: 30px;
-      font-family: '87MM ILSANG', serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 28px;
-      font-weight: 400;
+      font-weight: 500;
       color: var(--text);
       line-height: 40px;
       letter-spacing: -1.12px;
@@ -539,9 +542,9 @@
 
     /* "더 베일리하우스 삼성" — Pretendard SemiBold 27px */
     .location-name-ko {
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 27px;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--text);
       margin-bottom: 18px;
     }
@@ -552,9 +555,9 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 24px;
-      font-weight: 400;
+      font-weight: 500;
       color: var(--text);
     }
 
@@ -576,7 +579,7 @@
       display: block;
       text-align: center;
       margin: 18px 0 40px;
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 22px;
       color: #03C75A; /* 네이버 그린 */
       text-decoration: none;
@@ -604,9 +607,9 @@
 
     /* 교통 라벨 — Pretendard SemiBold 26px */
     .transport-label {
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 26px;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--text);
       white-space: nowrap;
       min-width: 148px;
@@ -615,18 +618,18 @@
 
     /* 교통 설명 — Pretendard Regular 26px, line-height 40px */
     .transport-desc {
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 26px;
-      font-weight: 400;
+      font-weight: 500;
       color: var(--text);
       line-height: 40px;
     }
 
     /* 교통 주의사항 */
     .transport-note {
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 18px;
-      font-weight: 400;
+      font-weight: 500;
       color: #777;
       line-height: 26px;
       text-align: center;
@@ -651,9 +654,9 @@
       border: 1px solid var(--border-light);
       border-radius: 5px;
       background: var(--white);
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 26px;
-      font-weight: 400;
+      font-weight: 500;
       color: var(--text);
       text-decoration: none;
       cursor: pointer;
@@ -676,9 +679,9 @@
 
     /* "마음 전하는 곳" — Pretendard Medium 50px */
     .gift-title {
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 50px;
-      font-weight: 500;
+      font-weight: 700;
       color: var(--text);
       letter-spacing: -1.5px;
       margin-bottom: 65px;
@@ -686,9 +689,9 @@
 
     /* 설명 — Pretendard Regular 26px, line-height 46px */
     .gift-desc {
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 26px;
-      font-weight: 400;
+      font-weight: 500;
       color: #8b8b8b;
       line-height: 46px;
       letter-spacing: -0.78px;
@@ -707,9 +710,9 @@
       margin-bottom: 30px;
       cursor: pointer;
       border: none;
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 28px;
-      font-weight: 500;
+      font-weight: 700;
       color: var(--text);
       letter-spacing: -0.84px;
       transition: opacity 0.15s;
@@ -757,18 +760,18 @@
 
     /* 역할 라벨 — Pretendard Regular 17px */
     .account-who {
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 28px;
-      font-weight: 400;
+      font-weight: 500;
       color: #aaa;
       margin-bottom: 8px;
     }
 
     /* 계좌번호 — Pretendard Regular 28px */
     .account-num {
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 28px;
-      font-weight: 400;
+      font-weight: 500;
       color: var(--text);
     }
     /* 전화번호 자동 링크(파란 글씨·밑줄) 방지 */
@@ -808,9 +811,9 @@
 
     /* 설명 — Pretendard Regular 26px, line-height 46px */
     .wishes-desc {
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 26px;
-      font-weight: 400;
+      font-weight: 500;
       color: var(--text);
       line-height: 46px;
       letter-spacing: -0.78px;
@@ -828,9 +831,9 @@
       border: 1px solid var(--border);
       border-radius: 4px;
       background: var(--white);
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 28px;
-      font-weight: 500;
+      font-weight: 700;
       color: var(--text);
       cursor: pointer;
       letter-spacing: -0.5px;
@@ -869,9 +872,9 @@
     }
 
     .wish-modal-title {
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 32px;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--text);
       margin-bottom: 28px;
       text-align: center;
@@ -898,7 +901,7 @@
       border: 1px solid var(--border);
       border-radius: 8px 8px 0 0;
       padding: 20px 24px;
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 34px;
       color: var(--text);
       resize: none;
@@ -915,7 +918,7 @@
       border-top: none;
       border-radius: 0;
       padding: 0 24px;
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 34px;
       color: var(--text);
       outline: none;
@@ -931,7 +934,7 @@
       border-top: none;
       border-radius: 0 0 8px 8px;
       padding: 0 24px;
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 34px;
       color: var(--text);
       outline: none;
@@ -948,9 +951,9 @@
       border: none;
       border-radius: 8px;
       background: var(--text);
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 28px;
-      font-weight: 500;
+      font-weight: 700;
       color: var(--white);
       cursor: pointer;
       letter-spacing: -0.5px;
@@ -997,9 +1000,9 @@
 
     /* 메모 텍스트 — Pretendard Regular 28px */
     .wish-card-text {
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 28px;
-      font-weight: 400;
+      font-weight: 500;
       color: var(--text);
       line-height: 46px;
       letter-spacing: -0.84px;
@@ -1009,9 +1012,9 @@
 
     /* from. 이름 — Pretendard Light 24px */
     .wish-card-from {
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 24px;
-      font-weight: 300;
+      font-weight: 500;
       color: var(--text);
       line-height: 46px;
       letter-spacing: -0.72px;
@@ -1098,9 +1101,9 @@
     }
 
     .footer-credit {
-      font-family: 'Pretendard', sans-serif;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
       font-size: 14px;
-      font-weight: 300;
+      font-weight: 500;
       color: #ccc;
       line-height: 1.8;
     }
@@ -1756,8 +1759,8 @@
       var marker = new naver.maps.Marker({ position: venue, map: map, title: VENUE.title });
       var info = new naver.maps.InfoWindow({
         content: '<div style="padding:7px 14px;background:#fff;border-radius:9px;'
-               + 'box-shadow:0 2px 8px rgba(0,0,0,.22);font-size:16px;font-weight:600;'
-               + 'font-family:Pretendard,sans-serif;white-space:nowrap;color:#222;">'
+               + 'box-shadow:0 2px 8px rgba(0,0,0,.22);font-size:16px;font-weight:700;'
+               + 'font-family:'Spoqa Han Sans Neo',sans-serif;white-space:nowrap;color:#222;">'
                + VENUE.title + '</div>',
         borderWidth: 0,
         disableAnchor: true,
