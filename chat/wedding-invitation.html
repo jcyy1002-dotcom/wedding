@@ -24,7 +24,7 @@
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Apple SD Gothic Neo', sans-serif;
     background: #fafafa;
-    display: flex; justify-content: center; align-items: center;
+    display: flex; justify-content: center; align-items: flex-start;
     min-height: 100vh; color: var(--dark);
   }
   .handwrite { font-family: 'KyoboHandwriting2025', inherit; }
@@ -68,6 +68,10 @@
   .topbar .logo { font-size: 26px; }
   .topbar .tb-icons { display: flex; gap: 20px; }
   .topbar .tb-icons svg { width: 26px; height: 26px; stroke: var(--dark); fill: none; stroke-width: 1.8; }
+  .topbar .tb-like { display: inline-flex; cursor: pointer; }
+  .topbar .tb-like:active svg { transform: scale(.88); }
+  .topbar .tb-like.liked svg { fill: #ed4956; stroke: #ed4956; animation: tbHeartPop .4s ease; }
+  @keyframes tbHeartPop { 0%{transform:scale(1)} 40%{transform:scale(1.35)} 100%{transform:scale(1)} }
 
   /* ===== 스크롤 영역 ===== */
   .app-scroll {
@@ -325,7 +329,9 @@
   <div class="topbar">
     <span class="logo handwrite">cy_yg_wedding</span>
     <span class="tb-icons">
-      <svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+      <span class="tb-like" id="tbLike" onclick="toggleTopLike()" role="button" aria-label="좋아요">
+        <svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+      </span>
     </span>
   </div>
 
@@ -657,6 +663,13 @@
   function showToast(m){
     toastEl.textContent = m; toastEl.classList.add('show');
     clearTimeout(toastTimer); toastTimer = setTimeout(function(){ toastEl.classList.remove('show'); }, 1500);
+  }
+
+  // 우측 상단 하트 토글 (빈 하트 ↔ 빨간 하트)
+  function toggleTopLike(){
+    var el = document.getElementById('tbLike');
+    var liked = el.classList.toggle('liked');
+    if(liked) showToast('사랑합니다 ❤️');
   }
 
   // ===== 축하 메시지 =====
