@@ -678,19 +678,44 @@
   msgText.addEventListener('input', function(){ msgCount.textContent = msgText.value.length; });
   document.getElementById('msgPw').addEventListener('input', function(){ this.value = this.value.replace(/[^0-9]/g,'').slice(0,4); });
 
-  var messagesLoaded = false;
+  // ① 로컬 캐시를 즉시 표시(시트 열자마자 바로 보임) → ② 최신본 받아 조용히 갱신
+  var MSG_CACHE_KEY = 'weddingMsgCache_v1';
+  var lastMsgSig = '';
+  var msgCacheShown = false;
+
+  function renderMessages(messages){
+    var list = document.getElementById('msgList');
+    list.innerHTML = '';
+    // 서버는 오래된→최신. prepend 하면 최신이 위로.
+    messages.forEach(function(m){ prependMessage(m, list); });
+    if(!list.children.length){ list.innerHTML = '<div class="msg-empty">첫 번째 축하 메시지를 남겨주세요 💐</div>'; }
+  }
+
   function loadMessages(){
-    if(messagesLoaded) return;
-    messagesLoaded = true;
+    // ① 이전에 본 메시지를 이 브라우저에서 즉시 표시 (첫 오픈 때 한 번)
+    if(!msgCacheShown){
+      msgCacheShown = true;
+      try {
+        var cached = localStorage.getItem(MSG_CACHE_KEY);
+        if(cached){
+          var msgs = JSON.parse(cached);
+          if(msgs && msgs.length){
+            renderMessages(msgs);
+            lastMsgSig = msgs.map(function(m){ return m.id; }).join(',');
+          }
+        }
+      } catch(e){}
+    }
+    // ② 최신본을 받아 바뀐 경우에만 다시 그림 + 캐시 갱신
     api({ action: 'list' }).then(function(r){
       if(r && r.ok && r.messages){
-        var list = document.getElementById('msgList');
-        list.innerHTML = '';
-        // 서버는 오래된→최신. prepend 하면 최신이 위로.
-        r.messages.forEach(function(m){ prependMessage(m, list); });
-        if(!list.children.length){ list.innerHTML = '<div class="msg-empty">첫 번째 축하 메시지를 남겨주세요 💐</div>'; }
+        var sig = r.messages.map(function(m){ return m.id; }).join(',');
+        if(sig === lastMsgSig) return;   // 변화 없으면 유지 (깜빡임 방지)
+        lastMsgSig = sig;
+        renderMessages(r.messages);
+        try { localStorage.setItem(MSG_CACHE_KEY, JSON.stringify(r.messages)); } catch(e){}
       }
-    }).catch(function(){ messagesLoaded = false; });
+    }).catch(function(){});
   }
 
   function prependMessage(m, list){
