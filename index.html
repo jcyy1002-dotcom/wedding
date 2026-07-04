@@ -245,27 +245,28 @@
       color: var(--text);
       line-height: 44px;
       letter-spacing: -1.25px;
-      margin-bottom: 130px;
+      margin-bottom: 200px;
     }
 
     .parents-wrap {
-      display: flex;
-      flex-direction: column;
-      gap: 45px;
-    }
-
-    /* 혼주 이름 — 87MM ILSANG 30px */
-    .parent-row {
-      display: flex;
-      align-items: center;
+      display: grid;
+      grid-template-columns: auto auto auto auto auto;
       justify-content: center;
-      gap: 10px;
+      align-items: center;
+      column-gap: 10px;
+      row-gap: 45px;
+      /* 혼주 이름 — 87MM ILSANG 30px */
       font-family: '87MM ILSANG', serif;
       font-size: 30px;
       font-weight: 400;
       color: var(--text);
       line-height: 34px;
       letter-spacing: -0.9px;
+    }
+
+    /* 각 줄의 칸(아버지·점·어머니·의 아들딸·이름)을 세로로 정렬 */
+    .parent-row {
+      display: contents;
     }
 
     .parent-dot {
@@ -574,7 +575,7 @@
     .map-open-link {
       display: block;
       text-align: center;
-      margin: 18px 0 0;
+      margin: 18px 0 40px;
       font-family: 'Pretendard', sans-serif;
       font-size: 22px;
       color: #03C75A; /* 네이버 그린 */
@@ -1164,8 +1165,10 @@
     />
     <p class="invite-title">예경과 찬영 결혼합니다.</p>
     <p class="invite-body">
-      오랜 시간 서로의 곁을 지키며 가장 편안한 사람이 되었습니다.<br>
-      이제는 같은 곳을 바라보며 한 걸음 더 나아가려 합니다.<br>
+      오랜 시간 서로의 곁을 지키며<br>
+      가장 편안한 사람이 되었습니다.<br>
+      이제는 같은 곳을 바라보며<br>
+      한 걸음 더 나아가려 합니다.<br>
       소중한 날, 함께해 주시면 감사하겠습니다.
     </p>
     <div class="parents-wrap">
