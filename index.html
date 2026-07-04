@@ -9,7 +9,7 @@
   <!-- ── 카카오톡 / SNS 링크 미리보기(썸네일) ── -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="찬영&amp;예경의 결혼식에 초대합니다." />
-  <meta property="og:description" content="2026.09.20(일) 오전11시 더 베일리하우스" />
+  <meta property="og:description" content="2026.09.20 (일) 오전 11시 더 베일리하우스" />
   <meta property="og:image" content="https://chanyoungyegyeong.xyz/thumb.jpg" />
   <meta property="og:image:width" content="800" />
   <meta property="og:image:height" content="400" />
@@ -234,7 +234,7 @@
     .ornament-img {
       width: 58px;
       height: 30px;
-      margin: 0 auto 65px;
+      margin: 0 auto 100px;
       display: block;
     }
 
@@ -245,7 +245,7 @@
       font-weight: 500;
       color: var(--text);
       letter-spacing: -1.8px;
-      margin-bottom: 85px;
+      margin-bottom: 130px;
       line-height: normal;
     }
 
@@ -257,7 +257,7 @@
       color: var(--text);
       line-height: 58px;
       letter-spacing: -1.25px;
-      margin-bottom: 85px;
+      margin-bottom: 130px;
     }
 
     .parents-wrap {
@@ -1282,16 +1282,36 @@
     </div>
     <div class="moments-viewport">
     <div class="moments-scroll">
-      <div class="moment-photo"><img src="photo01.jpeg" alt="사진01"></div>
-      <div class="moment-photo"><img src="photo02.jpeg" alt="사진02"></div>
-      <div class="moment-photo"><img src="photo03.jpeg" alt="사진03"></div>
-      <div class="moment-photo"><img src="photo04.jpeg" alt="사진04"></div>
-      <div class="moment-photo"><img src="photo05.jpeg" alt="사진05"></div>
-      <div class="moment-photo"><img src="photo06.jpeg" alt="사진06"></div>
-      <div class="moment-photo"><img src="photo07.jpeg" alt="사진07"></div>
-      <div class="moment-photo"><img src="photo08.jpeg" alt="사진08"></div>
-      <div class="moment-photo"><img src="photo09.jpeg" alt="사진09"></div>
-      <div class="moment-photo"><img src="photo10.jpeg" alt="사진10"></div>
+      <div class="moment-photo"><img src="moment01.jpg" alt="사진01"></div>
+      <div class="moment-photo"><img src="moment02.jpg" alt="사진02"></div>
+      <div class="moment-photo"><img src="moment03.jpg" alt="사진03"></div>
+      <div class="moment-photo"><img src="moment04.jpg" alt="사진04" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment05.jpg" alt="사진05" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment06.jpg" alt="사진06" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment07.jpg" alt="사진07" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment08.jpg" alt="사진08" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment09.jpg" alt="사진09" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment10.jpg" alt="사진10" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment11.jpg" alt="사진11" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment12.jpg" alt="사진12" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment13.jpg" alt="사진13" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment14.jpg" alt="사진14" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment15.jpg" alt="사진15" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment16.jpg" alt="사진16" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment17.jpg" alt="사진17" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment18.jpg" alt="사진18" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment19.jpg" alt="사진19" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment20.jpg" alt="사진20" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment21.jpg" alt="사진21" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment22.jpg" alt="사진22" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment23.jpg" alt="사진23" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment24.jpg" alt="사진24" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment25.jpg" alt="사진25" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment26.jpg" alt="사진26" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment27.jpg" alt="사진27" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment28.jpg" alt="사진28" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment29.jpg" alt="사진29" loading="lazy"></div>
+      <div class="moment-photo"><img src="moment30.jpg" alt="사진30" loading="lazy"></div>
     </div>
     <div class="moments-mask-left"></div>
     </div>
@@ -1682,17 +1702,22 @@
   updateMomentDim();
 
   // 세로형 사진 최대 높이 기준으로 컨테이너 높이 통일
-  window.addEventListener('load', function () {
-    var imgs = document.querySelectorAll('.moment-photo img');
+  // (lazy 로딩 + 가로·세로 혼합 대응: 각 사진이 로드될 때마다 최대 높이 갱신)
+  (function () {
     var maxH = 0;
-    imgs.forEach(function (img) {
+    function applyH() {
+      document.querySelectorAll('.moment-photo').forEach(function (p) { p.style.height = maxH + 'px'; });
+    }
+    function consider(img) {
+      if (!img.naturalWidth) return;
       var h = img.naturalHeight * (640 / img.naturalWidth);
-      if (h > maxH) maxH = h;
+      if (h > maxH + 0.5) { maxH = h; applyH(); }
+    }
+    document.querySelectorAll('.moment-photo img').forEach(function (img) {
+      if (img.complete) consider(img);
+      img.addEventListener('load', function () { consider(img); });
     });
-    document.querySelectorAll('.moment-photo').forEach(function (p) {
-      p.style.height = maxH + 'px';
-    });
-  });
+  })();
 
   // 스크롤 등장 애니메이션
   (function () {
