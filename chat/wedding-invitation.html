@@ -340,11 +340,11 @@
     <!-- 프로필 -->
     <div class="profile">
       <div class="profile-top">
-        <div class="profile-ava"><img src="photo01.jpg" alt=""></div>
+        <div class="profile-ava"><img src="moment26.jpg" alt=""></div>
         <div class="profile-stats">
-          <div><div class="num" id="statPosts">18</div><div class="lbl">게시물</div></div>
+          <div><div class="num" id="statPosts">40</div><div class="lbl">게시물</div></div>
           <div><div class="num" id="statDday">D-?</div><div class="lbl">남은 날</div></div>
-          <div><div class="num">9.20</div><div class="lbl">그날</div></div>
+          <div><div class="num">9.20</div><div class="lbl">결혼식</div></div>
         </div>
       </div>
       <div class="profile-name handwrite">찬영 🤍 예경</div>
@@ -512,9 +512,10 @@
   var HEARTS = ['❤️','🧡','💛','💚','💙','💜','🩷','🩵','🤎','🖤','🤍'];
   function randomHeart(){ return HEARTS[Math.floor(Math.random() * HEARTS.length)]; }
 
-  // ===== 사진 목록 =====
+  // ===== 사진 목록 (moment 30장 → celine 10장) =====
   var PHOTOS = [];
-  for(var i = 1; i <= 18; i++){ PHOTOS.push('photo' + (i < 10 ? '0' + i : i) + '.jpg'); }
+  for(var i = 1; i <= 30; i++){ PHOTOS.push('moment' + (i < 10 ? '0' + i : i) + '.jpg'); }
+  for(var i = 1; i <= 10; i++){ PHOTOS.push('celine' + i + '.jpg'); }
 
   // 스플래시
   setTimeout(function(){ document.getElementById('splash').classList.add('hide'); }, 1500);
@@ -550,7 +551,7 @@
     PHOTOS.forEach(function(src, idx){
       html +=
         '<div class="post" id="post-' + idx + '">' +
-          '<div class="post-top"><div class="p-ava"><img src="photo01.jpg" alt=""></div><div class="p-name">cy_yg_wedding</div></div>' +
+          '<div class="post-top"><div class="p-ava"><img src="moment26.jpg" alt=""></div><div class="p-name">cy_yg_wedding</div></div>' +
           '<div class="post-imgwrap" data-idx="' + idx + '">' +
             '<img src="' + src + '" alt="" loading="lazy">' +
             '<span class="heart-burst"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></span>' +
