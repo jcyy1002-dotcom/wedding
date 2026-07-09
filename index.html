@@ -99,6 +99,15 @@
       overflow: hidden;
     }
 
+    /* 스플래시가 열릴 때 메인 화면이 서서히 나타남(페이드인) */
+    @keyframes screenFadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    .phone.enter {
+      animation: screenFadeIn 3s ease both;
+    }
+
     /* ── 01 INTRO (Figma: frame 760×860, 20px margin each side) ── */
     .intro {
       position: relative;
@@ -145,6 +154,11 @@
       margin-bottom: 25px;
       opacity: 0;
       animation: subtitleRise 1.5s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+      /* 이름과 동일하게 페이드인 후 1초에 시작 */
+      animation-play-state: paused;
+    }
+    .phone.names-in .intro-subtitle {
+      animation-play-state: running;
     }
 
     /* "chanyoung & yegyeong" — Sackers Heavy 43px */
@@ -197,6 +211,11 @@
       display: inline-block;
       opacity: 0;
       animation: typeReveal 0.32s ease forwards;
+      /* 페이드인이 끝나기 전엔 대기 → .names-in 붙으면 한 글자씩 써짐 */
+      animation-play-state: paused;
+    }
+    .phone.names-in .intro-names .letter {
+      animation-play-state: running;
     }
 
     /* 일러스트 */
@@ -269,7 +288,7 @@
       row-gap: 45px;
       /* 혼주 이름 — 87MM ILSANG */
       font-family: 'Spoqa Han Sans Neo', sans-serif;
-      font-size: 40px;
+      font-size: 38px;
       font-weight: 400;
       color: var(--text);
       line-height: 46px;
@@ -298,7 +317,7 @@
 
     /* 의 아들/딸 */
     .parent-suffix {
-      font-size: 26px;
+      font-size: 24px;
       letter-spacing: -0.66px;
       font-weight: 500;
     }
@@ -1962,7 +1981,17 @@
       card.style.transition = 'transform 0.5s cubic-bezier(0.5, 0, 0.75, 0)';
       card.style.transform = 'translateY(-540px)'; // 흰 종이가 위로 빠져나감
       document.body.style.overflow = '';
-      setTimeout(function () { splash.classList.add('s2-open'); }, 220); // 배경 페이드아웃
+      // 배경이 페이드아웃되는 순간, 메인 화면이 아래에서 서서히 떠오름
+      setTimeout(function () {
+        splash.classList.add('s2-open');
+        var phone = document.querySelector('.phone');
+        if (phone) {
+          phone.classList.add('enter');
+          // 페이드인 시작 후 1초에 이름 글자 쓰기 시작
+          setTimeout(function () { phone.classList.add('names-in'); }, 1000);
+        }
+      }, 220);
+      setTimeout(function () { if (splash.parentNode) splash.parentNode.removeChild(splash); }, 820);
       setTimeout(function () { if (splash.parentNode) splash.parentNode.removeChild(splash); }, 820);
       try { startMusic(); } catch (e) {}
     }
