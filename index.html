@@ -113,7 +113,7 @@
     .intro-border-outer {
       position: absolute;
       top: 20px; left: 20px; right: 20px; bottom: 20px;
-      border: 1px solid var(--border);
+      border: 2px solid #000;
       pointer-events: none;
     }
 
@@ -1257,8 +1257,8 @@
     /* sp.svg 편지봉투 (3겹: 뒤판 / 흰카드 / 앞면) — 절반 크기 */
     .s2-env {
       position: relative;
-      width: 170px;
-      height: 314px;
+      width: 255px;
+      height: 471px;
       cursor: grab;
     }
     .s2-env:active { cursor: grabbing; }
@@ -1302,7 +1302,7 @@
     <img class="s2-layer s2-paper" id="s2card" src="sp_card.svg" alt="초대장" draggable="false">
     <img class="s2-layer s2-front" src="sp_front.svg" alt="" draggable="false">
   </div>
-  <div class="s2-hint">↑ 위로 밀어 초대장 열기</div>
+  <div class="s2-hint">↑ 위로 밀어 청첩장 열기</div>
 </div>
 
 <div class="phone">
@@ -1364,11 +1364,11 @@
     </svg>
     <p class="invite-title">찬영과 예경 결혼합니다.</p>
     <p class="invite-body">
-      오랜 시간 서로의 곁을 지키며<br>
-      가장 편안한 사람이 되었습니다.<br>
-      이제는 같은 곳을 바라보며<br>
-      한 걸음 더 나아가려 합니다.<br>
-      소중한 날, 함께해 주시면 감사하겠습니다.
+      일곱 번째 가을을 함께한 두 사람이<br>
+      이제 평생의 계절을 함께하려 합니다.<br>
+      따스한 9월의 햇살 아래,<br>
+      저희의 새로운 시작을<br>
+      함께해 주시면 감사하겠습니다.
     </p>
     <div class="parents-wrap">
       <div class="parent-row">
@@ -1960,7 +1960,7 @@
     function openSplash() {
       opened = true;
       card.style.transition = 'transform 0.5s cubic-bezier(0.5, 0, 0.75, 0)';
-      card.style.transform = 'translateY(-360px)'; // 흰 종이가 위로 빠져나감
+      card.style.transform = 'translateY(-540px)'; // 흰 종이가 위로 빠져나감
       document.body.style.overflow = '';
       setTimeout(function () { splash.classList.add('s2-open'); }, 220); // 배경 페이드아웃
       setTimeout(function () { if (splash.parentNode) splash.parentNode.removeChild(splash); }, 820);
