@@ -1361,7 +1361,8 @@
       </div>
       <img
         class="intro-illustration"
-        src="motion.gif"
+        id="intro-gif"
+        src="motion_frame1.gif"
         alt="신랑신부 일러스트"
         width="566"
         height="600"
@@ -2116,7 +2117,7 @@
   (function () {
     var container = document.querySelector('.intro-names');
     if (!container) return;
-    var START = 0.3, STEP = 0.1, idx = 0;
+    var START = 0.3, STEP = 0.1, idx = 0, lastSpan = null;
     Array.prototype.forEach.call(container.children, function (el) {
       var text = el.textContent;
       el.textContent = '';
@@ -2127,9 +2128,22 @@
         s.textContent = text[i];
         s.style.animationDelay = (START + idx * STEP).toFixed(2) + 's';
         el.appendChild(s);
+        lastSpan = s;
         idx++;
       }
     });
+
+    // motion.gif 미리 받아두기 (이름이 다 써지면 지연 없이 바로 재생)
+    var pre = new Image();
+    pre.src = 'motion.gif';
+
+    // 마지막 글자 애니메이션이 끝나면 정지 프레임 → 실제 gif로 교체해 재생
+    if (lastSpan) {
+      lastSpan.addEventListener('animationend', function () {
+        var gif = document.getElementById('intro-gif');
+        if (gif && gif.src.indexOf('motion.gif') === -1) gif.src = 'motion.gif';
+      });
+    }
   })();
 </script>
 
