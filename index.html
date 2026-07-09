@@ -1231,163 +1231,78 @@
       color: #ccc;
       line-height: 1.8;
     }
-    /* ── 00 SPLASH (편지봉투 → 편지지 위로 스와이프) ── */
-    .splash {
+    /* ── 00 SPLASH (편지봉투 → 카드를 위로 밀어 입장) ── */
+    .splash2 {
       position: fixed;
-      inset: 0;
-      z-index: 10000;
-      background: linear-gradient(180deg, #f8f3ea 0%, #efe6d5 100%);
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 99999;
+      background: #f4f3f1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       overflow: hidden;
+      touch-action: none;
       user-select: none;
       -webkit-user-select: none;
-      touch-action: none;
-      transition: opacity 0.6s ease 0.1s;
+      transition: opacity 0.55s ease;
     }
-    .splash.open {
-      opacity: 0;
-      pointer-events: none;
-    }
+    .splash2.s2-open { opacity: 0; pointer-events: none; }
 
-    .splash-top {
-      font-family: 'Sackers Gothic Std', sans-serif;
-      font-size: 26px;
-      letter-spacing: 3px;
-      color: #8a7d63;
-      margin-bottom: 40px;
-      text-align: center;
-    }
-
-    /* 봉투 무대 */
-    .env-stage {
+    /* sp.svg 편지봉투 (3겹: 뒤판 / 흰카드 / 앞면) — 절반 크기 */
+    .s2-env {
       position: relative;
-      width: 560px;
-      height: 380px;
+      width: 170px;
+      height: 314px;
+      cursor: grab;
     }
-
-    /* 봉투 뒷판 */
-    .env-back {
+    .s2-env:active { cursor: grabbing; }
+    .s2-layer {
       position: absolute;
-      inset: 0;
-      background: #efe6d6;
-      border: 1px solid #e2d5bc;
-      border-radius: 10px;
-      box-shadow: 0 30px 60px rgba(90, 74, 45, 0.18);
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      -webkit-user-drag: none;
     }
-
-    /* 편지지 (드래그 대상) */
-    .letter {
-      position: absolute;
-      left: 30px;
-      right: 30px;
-      bottom: 22px;
-      height: 430px;
-      background: linear-gradient(180deg, #fffdf9 0%, #fbf6ec 100%);
-      border: 1px solid #ece2d0;
-      border-radius: 8px 8px 4px 4px;
-      box-shadow: 0 -6px 16px rgba(90, 74, 45, 0.08);
+    .s2-back  { z-index: 1; }
+    .s2-front { z-index: 3; }
+    /* 흰 종이 + 일러스트 + 글씨 — 위로 밀리는 부분 */
+    .s2-paper {
       z-index: 2;
       transform: translateY(0);
-      transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding-top: 48px;
-      cursor: grab;
-      touch-action: none;
-    }
-    .letter:active { cursor: grabbing; }
-
-    .letter-inner { text-align: center; padding: 0 30px; }
-    .letter-invite {
-      font-family: 'Sackers Gothic Std', sans-serif;
-      font-size: 19px;
-      letter-spacing: 2px;
-      color: #bcab83;
-      margin-bottom: 24px;
-    }
-    .letter-names {
-      font-family: 'Sackers Gothic Std', sans-serif;
-      font-size: 34px;
-      font-weight: 900;
-      color: #4a4133;
-      line-height: 1.5;
-    }
-    .letter-amp { font-weight: 500; font-size: 18px; }
-    .letter-line {
-      width: 44px;
-      height: 1px;
-      background: #d8cbb0;
-      margin: 26px auto;
-    }
-    .letter-date {
-      font-family: 'Spoqa Han Sans Neo', sans-serif;
-      font-size: 22px;
-      letter-spacing: 3px;
-      color: #8a7d63;
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    /* 봉투 앞주머니 (편지지 아랫부분을 가림) */
-    .env-front {
-      position: absolute;
-      inset: 0;
-      background: #e8dcc4;
-      border: 1px solid #ddceb0;
-      border-radius: 10px;
-      z-index: 3;
-      clip-path: polygon(0 44%, 50% 72%, 100% 44%, 100% 100%, 0 100%);
-      box-shadow: inset 0 6px 12px rgba(255, 255, 255, 0.35);
-    }
-
-    /* 안내 문구 */
-    .splash-hint {
-      margin-top: 58px;
-      text-align: center;
-      color: #9a8f79;
+    .s2-hint {
+      margin-top: 40px;
+      color: #a6a29c;
       font-size: 24px;
       letter-spacing: 1px;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
+      animation: s2HintPulse 1.8s ease-in-out infinite;
     }
-    .hint-arrow {
-      display: block;
-      font-size: 32px;
-      margin-bottom: 10px;
-      animation: hintBounce 1.5s ease-in-out infinite;
-    }
-    @keyframes hintBounce {
-      0%, 100% { transform: translateY(0); opacity: 0.5; }
-      50%      { transform: translateY(-12px); opacity: 1; }
-    }
-
-    .splash.open .letter {
-      transform: translateY(-150%) !important;
-      transition: transform 0.6s cubic-bezier(0.5, 0, 0.75, 0) !important;
+    @keyframes s2HintPulse {
+      0%, 100% { opacity: 0.45; }
+      50%      { opacity: 1; }
     }
   </style>
 </head>
 <body>
 
-<!-- ── 00 SPLASH ── -->
-<div class="splash" id="splash">
-  <p class="splash-top">the wedding of</p>
-  <div class="env-stage">
-    <div class="env-back"></div>
-    <div class="letter" id="letter">
-      <div class="letter-inner">
-        <p class="letter-invite">INVITATION</p>
-        <p class="letter-names">chanyoung<br><span class="letter-amp">&amp;</span> yegyeong</p>
-        <div class="letter-line"></div>
-        <p class="letter-date">2026 · 09 · 20</p>
-      </div>
-    </div>
-    <div class="env-front"></div>
+<!-- ── 00 SPLASH (sp.svg 편지봉투, 3겹) ── -->
+<div class="splash2" id="splash2">
+  <div class="s2-env">
+    <img class="s2-layer s2-back" src="sp_back.svg" alt="" draggable="false">
+    <img class="s2-layer s2-paper" id="s2card" src="sp_card.svg" alt="초대장" draggable="false">
+    <img class="s2-layer s2-front" src="sp_front.svg" alt="" draggable="false">
   </div>
-  <div class="splash-hint">
-    <span class="hint-arrow">↑</span>
-    <span>편지를 위로 올려 초대장 열기</span>
-  </div>
+  <div class="s2-hint">↑ 위로 밀어 초대장 열기</div>
 </div>
 
 <div class="phone">
@@ -2008,69 +1923,56 @@
   var audio = new Audio('free.mp3'); // 음악 파일명 여기서 변경
   audio.loop = true;
 
-  // 스플래시 해제 등 사용자 제스처 시점에 호출 → 모바일 자동재생 허용됨
+  // 스플래시 입장(사용자 제스처) 시점에 재생 → 모바일 자동재생 허용됨
   function startMusic() {
-    audio.play().then(function () {
-      musicPlaying = true;
-      var b = document.getElementById('music-btn');
-      b.classList.remove('off');
-      b.classList.add('playing');
-    }).catch(function () {
-      musicPlaying = false;
-      document.getElementById('music-btn').classList.add('off');
-    });
+    var btn = document.getElementById('music-btn');
+    function ok() { musicPlaying = true; if (btn) { btn.classList.remove('off'); btn.classList.add('playing'); } }
+    function no() { musicPlaying = false; if (btn) btn.classList.add('off'); }
+    var p = audio.play();
+    if (p && typeof p.then === 'function') { p.then(ok).catch(no); } else { ok(); }
   }
 
-  // ── 스플래시: 편지지를 위로 스와이프하면 열림 + 음악 재생 ──
+  // ── 스플래시: 편지 카드를 위로 밀면 입장 + 음악 재생 ──
   (function () {
-    var splash = document.getElementById('splash');
-    var letter = document.getElementById('letter');
-    if (!splash || !letter) return;
+    var splash = document.getElementById('splash2');
+    var card = document.getElementById('s2card');
+    if (!splash || !card) return;
 
     document.body.style.overflow = 'hidden';
 
     var dragging = false, startY = 0, dy = 0, opened = false;
-    var THRESHOLD = 130; // 이 이상 위로 밀면 열림
+    var THRESHOLD = 70; // 이 이상 위로 밀면 입장
 
-    function onStart(y) {
-      if (opened) return;
-      dragging = true; dy = 0; startY = y;
-      letter.style.transition = 'none';
-    }
+    function onStart(y) { if (opened) return; dragging = true; dy = 0; startY = y; card.style.transition = 'none'; }
     function onMove(y) {
       if (!dragging || opened) return;
       dy = y - startY;
       if (dy > 0) dy = 0; // 위로만
-      letter.style.transform = 'translateY(' + dy + 'px)';
+      card.style.transform = 'translateY(' + dy + 'px)';
     }
     function onEnd() {
       if (!dragging || opened) return;
       dragging = false;
-      letter.style.transition = '';
-      if (-dy > THRESHOLD) {
-        openSplash();
-      } else {
-        letter.style.transform = 'translateY(0)';
-      }
+      card.style.transition = '';
+      if (-dy > THRESHOLD) { openSplash(); }
+      else { card.style.transform = 'translateY(0)'; }
     }
     function openSplash() {
       opened = true;
-      letter.style.transform = '';
-      splash.classList.add('open');
-      startMusic(); // 제스처 안에서 호출 → 자동재생 성공
-      setTimeout(function () {
-        splash.style.display = 'none';
-        document.body.style.overflow = '';
-      }, 750);
+      card.style.transition = 'transform 0.5s cubic-bezier(0.5, 0, 0.75, 0)';
+      card.style.transform = 'translateY(-360px)'; // 흰 종이가 위로 빠져나감
+      document.body.style.overflow = '';
+      setTimeout(function () { splash.classList.add('s2-open'); }, 220); // 배경 페이드아웃
+      setTimeout(function () { if (splash.parentNode) splash.parentNode.removeChild(splash); }, 820);
+      try { startMusic(); } catch (e) {}
     }
 
-    // 터치
-    letter.addEventListener('touchstart', function (e) { onStart(e.touches[0].clientY); }, { passive: true });
-    letter.addEventListener('touchmove', function (e) { onMove(e.touches[0].clientY); e.preventDefault(); }, { passive: false });
-    letter.addEventListener('touchend', onEnd);
-    letter.addEventListener('touchcancel', onEnd);
-    // 마우스(데스크톱 테스트용)
-    letter.addEventListener('mousedown', function (e) { onStart(e.clientY); e.preventDefault(); });
+    // 스플래시 화면 어디를 잡아도 위로 밀 수 있도록 splash 전체에 바인딩(이벤트 버블링)
+    splash.addEventListener('touchstart', function (e) { onStart(e.touches[0].clientY); }, { passive: true });
+    splash.addEventListener('touchmove', function (e) { onMove(e.touches[0].clientY); if (dragging) e.preventDefault(); }, { passive: false });
+    splash.addEventListener('touchend', onEnd);
+    splash.addEventListener('touchcancel', onEnd);
+    splash.addEventListener('mousedown', function (e) { onStart(e.clientY); e.preventDefault(); });
     window.addEventListener('mousemove', function (e) { onMove(e.clientY); });
     window.addEventListener('mouseup', onEnd);
   })();
