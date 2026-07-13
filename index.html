@@ -8,7 +8,7 @@
 
   <!-- ── 카카오톡 / SNS 링크 미리보기(썸네일) ── -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="찬영&amp;예경의 결혼식에 초대합니다." />
+  <meta property="og:title" content="예경 ♡ 찬영 결혼식에 초대합니다." />
   <meta property="og:description" content="2026.09.20 (일) 오전 11시 더 베일리하우스" />
   <meta property="og:image" content="https://chanyoungyegyeong.xyz/thumb.jpg" />
   <meta property="og:image:width" content="800" />
@@ -1254,6 +1254,33 @@
       color: #ccc;
       line-height: 1.8;
     }
+
+    /* ── 카카오톡으로 공유하기 ── */
+    .share-section {
+      padding: 90px 50px 110px;
+      background: var(--white);
+      text-align: center;
+    }
+    .kakao-share-btn {
+      width: 100%;
+      height: 110px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      border: none;
+      border-radius: 8px;
+      background: #FEE500;
+      font-family: 'Spoqa Han Sans Neo', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: #3A1D1D;
+      letter-spacing: -0.5px;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .kakao-share-btn:hover { opacity: 0.88; }
+    .kakao-share-btn svg { display: block; flex-shrink: 0; }
     /* ── 00 SPLASH (편지봉투 → 카드를 위로 밀어 입장) ── */
     .splash2 {
       position: fixed;
@@ -1714,6 +1741,16 @@
       <input class="wish-pw-input" id="wish-pw" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" placeholder="숫자 4자리 비밀번호" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,4)" />
       <button class="wish-submit-btn" onclick="addWish()">작성하기</button>
     </div>
+  </div>
+
+  <!-- ── 카카오톡으로 공유하기 ── -->
+  <div class="share-section">
+    <button class="kakao-share-btn" id="kakao-share-btn" onclick="shareKakao()">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="#3A1D1D" aria-hidden="true">
+        <path d="M12 3C6.48 3 2 6.58 2 11c0 2.82 1.86 5.3 4.66 6.7-.2.72-.74 2.67-.85 3.08-.13.51.19.5.4.36.16-.1 2.6-1.77 3.66-2.49.7.1 1.42.15 2.13.15 5.52 0 10-3.58 10-8C22 6.58 17.52 3 12 3z"/>
+      </svg>
+      카카오톡으로 공유하기
+    </button>
   </div>
 
   <!-- ── FOOTER ── -->
@@ -2205,6 +2242,43 @@
       initNaverMap();
     }
   })();
+</script>
+
+<!-- ── 카카오톡 공유 SDK ── -->
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js"></script>
+<script>
+  // 카카오 JavaScript 키로 초기화
+  if (window.Kakao && !Kakao.isInitialized()) {
+    Kakao.init('a48b03c563dbb67d29f221771934a1d9');
+  }
+
+  function shareKakao() {
+    if (!(window.Kakao && Kakao.Share)) {
+      alert('공유 기능을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.');
+      return;
+    }
+    Kakao.Share.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: '예경 ♡ 찬영 결혼식에 초대합니다.',
+        description: '2026.09.20 (일) 오전 11시 더 베일리하우스',
+        imageUrl: 'https://chanyoungyegyeong.xyz/thumb.jpg',
+        link: {
+          mobileWebUrl: 'https://chanyoungyegyeong.xyz/',
+          webUrl: 'https://chanyoungyegyeong.xyz/'
+        }
+      },
+      buttons: [
+        {
+          title: '모바일 청첩장',
+          link: {
+            mobileWebUrl: 'https://chanyoungyegyeong.xyz/',
+            webUrl: 'https://chanyoungyegyeong.xyz/'
+          }
+        }
+      ]
+    });
+  }
 </script>
 </body>
 </html>
